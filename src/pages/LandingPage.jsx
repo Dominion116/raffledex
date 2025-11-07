@@ -1,66 +1,82 @@
 import { Link } from 'react-router-dom';
-import { BarChart, CheckCircle, Shield } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Shield, Eye, Zap, ArrowRight } from 'lucide-react';
 
 const LandingPage = () => {
   return (
-    <div className="bg-background text-foreground">
+    <div className="min-h-screen">
       {/* Hero Section */}
-      <motion.div 
-        className="container mx-auto px-4 py-24 text-center"        
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-      >
-        <h1 className="text-6xl font-extrabold text-primary mb-6">
-          The Future of Raffles is Decentralized
-        </h1>
-        <p className="text-xl text-muted-foreground mb-10 max-w-3xl mx-auto">
-          Experience unparalleled fairness and transparency. Create, join, and win raffles with the power of blockchain technology.
-        </p>
-        <div>
-          <Link 
-            to="/raffles" 
-            className="bg-primary text-primary-foreground hover:bg-primary/90 py-4 px-10 rounded-full text-xl font-bold transition-transform transform hover:scale-105 shadow-lg"
-          >
-            Explore Raffles
-          </Link>
+      <div className="container px-4 py-24 text-center">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
+            Decentralized
+            <span className="text-gradient"> Raffles</span>
+          </h1>
+          <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto">
+            Create, join, and win raffles with complete transparency on the blockchain
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/raffles" className="btn-primary inline-flex items-center justify-center gap-2">
+              Explore Raffles <ArrowRight size={20} />
+            </Link>
+            <Link to="/create" className="btn-outline inline-flex items-center justify-center">
+              Create Raffle
+            </Link>
+          </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Features Section */}
-      <div className="bg-card/50 py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">Why Choose RaffleDex?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-            <motion.div 
-              className="flex flex-col items-center p-6 bg-card rounded-lg shadow-md"              
-              whileHover={{ scale: 1.05, y: -5 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <Shield size={64} className="text-accent mb-4" />
-              <h3 className="text-2xl font-semibold mb-2">Provably Fair</h3>
-              <p className="text-muted-foreground">Each winner is selected by a smart contract, ensuring no manipulation is possible. The entire process is verifiable on the blockchain.</p>
-            </motion.div>
-            <motion.div 
-              className="flex flex-col items-center p-6 bg-card rounded-lg shadow-md"
-              whileHover={{ scale: 1.05, y: -5 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <BarChart size={64} className="text-accent mb-4" />
-              <h3 className="text-2xl font-semibold mb-2">Transparent</h3>
-              <p className="text-muted-foreground">Every entry and the final winner selection are public record. Anyone can audit the results of a raffle at any time.</p>
-            </motion.div>
-            <motion.div 
-              className="flex flex-col items-center p-6 bg-card rounded-lg shadow-md"
-              whileHover={{ scale: 1.05, y: -5 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <CheckCircle size={64} className="text-accent mb-4" />
-              <h3 className="text-2xl font-semibold mb-2">Easy to Use</h3>
-              <p className="text-muted-foreground">Connect your wallet, browse existing raffles, or create your own in just a few clicks. It's that simple.</p>
-            </motion.div>
+      <div className="bg-muted/30 py-24">
+        <div className="container px-4">
+          <h2 className="text-4xl font-bold text-center mb-16">
+            Why RaffleDex?
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div className="card p-8 text-center hover-scale">
+              <div className="bg-primary/10 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Shield className="text-primary" size={32} />
+              </div>
+              <h3 className="text-xl font-bold mb-3">Provably Fair</h3>
+              <p className="text-muted-foreground">
+                Smart contracts ensure winners are selected randomly with no possibility of manipulation
+              </p>
+            </div>
+
+            <div className="card p-8 text-center hover-scale">
+              <div className="bg-primary/10 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Eye className="text-primary" size={32} />
+              </div>
+              <h3 className="text-xl font-bold mb-3">Fully Transparent</h3>
+              <p className="text-muted-foreground">
+                Every entry and winner selection is recorded on-chain and publicly verifiable
+              </p>
+            </div>
+
+            <div className="card p-8 text-center hover-scale">
+              <div className="bg-primary/10 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Zap className="text-primary" size={32} />
+              </div>
+              <h3 className="text-xl font-bold mb-3">Lightning Fast</h3>
+              <p className="text-muted-foreground">
+                Built on Celo for instant transactions and minimal gas fees
+              </p>
+            </div>
           </div>
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      <div className="container px-4 py-24">
+        <div className="card p-12 text-center max-w-3xl mx-auto">
+          <h2 className="text-4xl font-bold mb-4">
+            Ready to get started?
+          </h2>
+          <p className="text-muted-foreground text-lg mb-8">
+            Connect your wallet and create your first raffle in seconds
+          </p>
+          <Link to="/create" className="btn-primary inline-flex items-center justify-center gap-2">
+            Create Your Raffle <ArrowRight size={20} />
+          </Link>
         </div>
       </div>
     </div>

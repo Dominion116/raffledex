@@ -10,7 +10,6 @@ const CreateRaffle = () => {
   const [error, setError] = useState(null);
 
   const handleCreateRaffle = async () => {
-    // Validate input
     if (!maxParticipants || Number(maxParticipants) < 2) {
       setError('Please enter at least 2 participants');
       return;
@@ -21,7 +20,6 @@ const CreateRaffle = () => {
       return;
     }
 
-    // Check if wallet is connected
     if (!isConnected) {
       setError('Please connect your wallet first');
       return;
@@ -32,14 +30,11 @@ const CreateRaffle = () => {
 
     try {
       const result = await createRaffle(maxParticipants);
-      
-      // Show success message and navigate
       alert(`Raffle created successfully! Raffle ID: ${result.raffleId}`);
       navigate(`/raffle/${result.raffleId}`);
     } catch (err) {
       console.error("Error creating raffle:", err);
       
-      // Handle specific error cases
       if (err.code === 'ACTION_REJECTED') {
         setError('Transaction was rejected');
       } else if (err.message.includes('insufficient funds')) {
@@ -61,75 +56,81 @@ const CreateRaffle = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 min-h-screen flex items-center justify-center">
-      <div className="max-w-md w-full bg-white border border-gray-200 p-8 rounded-xl shadow-sm">
-        <h1 className="text-3xl font-bold mb-2 text-gray-900">Create a New Raffle</h1>
-        <p className="text-gray-600 mb-6">Set up your raffle in seconds</p>
-
-        {!isConnected ? (
-          <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-            <p className="text-sm text-amber-800 mb-3">
-              Connect your wallet to create a raffle
+    <div className="min-h-screen py-16 px-4">
+      <div className="container max-w-lg mx-auto">
+        <div className="card p-8">
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold mb-3">Create Raffle</h1>
+            <p className="text-muted-foreground text-lg">
+              Set up your raffle in seconds
             </p>
-            <button
-              onClick={handleConnectWallet}
-              className="w-full bg-amber-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-amber-600 transition-colors"
+          </div>
+
+          {!isConnected ? (
+            <div className="alert-warning mb-6">
+              <p className="text-sm font-medium mb-3">
+                Connect your wallet to create a raffle
+              </p>
+              <button
+                onClick={handleConnectWallet}
+                className="btn-primary w-full"
+              >
+                Connect Wallet
+              </button>
+            </div>
+          ) : (
+            <div className="alert-success mb-6">
+              <p className="text-sm font-semibold">
+                🟢 Connected: {account?.slice(0, 6)}...{account?.slice(-4)}
+              </p>
+            </div>
+          )}
+
+          <div className="mb-6">
+            <label 
+              htmlFor="maxParticipants" 
+              className="block text-foreground mb-3 font-semibold text-sm"
             >
-              Connect Wallet
-            </button>
-          </div>
-        ) : (
-          <div className="mb-6 p-3 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-sm text-green-800">
-              Connected: {account?.slice(0, 6)}...{account?.slice(-4)}
+              Max Participants
+            </label>
+            <input
+              id="maxParticipants"
+              type="number"
+              min="2"
+              max="10000"
+              value={maxParticipants}
+              onChange={(e) => {
+                setMaxParticipants(e.target.value);
+                setError(null);
+              }}
+              className="input"
+              placeholder="100"
+              disabled={!isConnected || loading}
+            />
+            <p className="text-sm text-muted-foreground mt-2">
+              Minimum 2, maximum 10,000 participants
             </p>
           </div>
-        )}
 
-        <div className="mb-6">
-          <label 
-            htmlFor="maxParticipants" 
-            className="block text-gray-700 mb-2 font-semibold"
+          <button
+            onClick={handleCreateRaffle}
+            disabled={!isConnected || loading || !maxParticipants}
+            className="btn-primary w-full mb-4"
           >
-            Max Participants
-          </label>
-          <input
-            id="maxParticipants"
-            type="number"
-            min="2"
-            max="10000"
-            value={maxParticipants}
-            onChange={(e) => {
-              setMaxParticipants(e.target.value);
-              setError(null);
-            }}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none"
-            placeholder="e.g., 100"
-            disabled={!isConnected || loading}
-          />
-          <p className="text-sm text-gray-500 mt-2">
-            Minimum 2, maximum 10,000 participants
-          </p>
-        </div>
+            {loading ? 'Creating Raffle...' : 'Create Raffle'}
+          </button>
 
-        <button
-          onClick={handleCreateRaffle}
-          disabled={!isConnected || loading || !maxParticipants}
-          className="w-full bg-slate-900 text-white py-3 px-4 rounded-lg font-semibold hover:bg-slate-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-        >
-          {loading ? 'Creating Raffle...' : 'Create Raffle'}
-        </button>
+          {error && (
+            <div className="alert-danger">
+              <p className="text-sm font-medium">{error}</p>
+            </div>
+          )}
 
-        {error && (
-          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-600">{error}</p>
+          <div className="mt-6 pt-6 border-t border-border">
+            <p className="text-sm text-muted-foreground text-center">
+              ⚡ Only gas fees apply (~$0.001 on Celo)
+            </p>
           </div>
-        )}
-
-        <div className="mt-6 pt-6 border-t border-gray-200">
-          <p className="text-sm text-gray-600 text-center">
-            You'll only pay gas fees (~$0.001 on Celo)
-          </p>
         </div>
       </div>
     </div>

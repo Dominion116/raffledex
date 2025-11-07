@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useRaffle } from '../contexts/RaffleContext';
-import { Users, Ticket, Trophy, XCircle, ArrowLeft, Loader2, PartyPopper, AlertTriangle, Info } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useWeb3 } from '../contexts/Web3Context';
+import { Users, Ticket, Trophy, ArrowLeft } from 'lucide-react';
 
 const RaffleDetailPage = () => {
   const { id } = useParams();
@@ -13,20 +13,22 @@ const RaffleDetailPage = () => {
     hasUserJoined, 
     joinRaffle, 
     drawWinner, 
-    cancelRaffle,
-    account,
+    cancelRaffle
   } = useRaffle();
+  const { address } = useWeb3();
 
   const [raffle, setRaffle] = useState(null);
   const [participants, setParticipants] = useState([]);
   const [userJoined, setUserJoined] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [actionLoading, setActionLoading] = useState(null); // Can be 'join', 'draw', 'cancel'
+  const [actionLoading, setActionLoading] = useState(false);
 
   const fetchDetails = useCallback(async () => {
+    setLoading(true);
+    setError(null);
     try {
-      const raffleId = BigInt(id);
+      const raffleId = Number(id);
       const [raffleDetails, participantsList] = await Promise.all([
         getRaffle(raffleId),
         getParticipants(raffleId),
@@ -35,134 +37,231 @@ const RaffleDetailPage = () => {
       setRaffle(raffleDetails);
       setParticipants(participantsList);
 
-      if (account) {
-        const joined = await hasUserJoined(raffleId, account);
+      if (address) {
+        const joined = await hasUserJoined(raffleId, address);
         setUserJoined(joined);
       }
     } catch (err) {
       console.error("Error fetching raffle details:", err);
-      setError("Failed to fetch raffle details. Please try again later.");
+      setError(`Failed to fetch raffle details: ${err.message}`);
     } finally {
       setLoading(false);
     }
-  }, [id, getRaffle, getParticipants, hasUserJoined, account]);
+  }, [id, getRaffle, getParticipants, hasUserJoined, address]);
 
   useEffect(() => {
     fetchDetails();
   }, [fetchDetails]);
 
-  const handleAction = async (action, actionName) => {
-    setActionLoading(actionName);
-    setError(null);
+  const handleJoin = async () => {
+    setActionLoading(true);
     try {
-      await action(BigInt(id));
+      await joinRaffle(Number(id));
       await fetchDetails();
     } catch (err) {
-      console.error(`Error with ${actionName}:`, err);
-      setError(`Failed to ${actionName.toLowerCase()} raffle: ${err.message}`);
+      console.error('Error joining raffle:', err);
+      setError(`Failed to join raffle: ${err.message}`);
     } finally {
-      setActionLoading(null);
+      setActionLoading(false);
+    }
+  };
+  
+  const handleDraw = async () => {
+    setActionLoading(true);
+    try {
+      await drawWinner(Number(id));
+      await fetchDetails();
+    } catch (err) {
+      console.error('Error drawing winner:', err);
+      setError(`Failed to draw winner: ${err.message}`);
+    } finally {
+      setActionLoading(false);
     }
   };
 
-  const isOwner = account && raffle && raffle.owner && account.toLowerCase() === raffle.owner.toLowerCase();
-  const isSoldOut = raffle && raffle.currentParticipants >= raffle.maxParticipants;
-  const canJoin = raffle && raffle.isActive && !raffle.isDrawn && !userJoined && !isSoldOut;
-  const canDraw = isOwner && raffle.isActive && !raffle.isDrawn && isSoldOut;
+  const handleCancel = async () => {
+    setActionLoading(true);
+    try {
+      await cancelRaffle(Number(id));
+      await fetchDetails();
+    } catch (err) {
+      console.error('Error cancelling raffle:', err);
+      setError(`Failed to cancel raffle: ${err.message}`);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+          <p className="text-muted-foreground">Loading raffle details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error && !raffle) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="alert-danger max-w-md">
+          <p className="font-semibold mb-2">Error</p>
+          <p className="text-sm">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!raffle) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-muted-foreground">Raffle not found.</p>
+      </div>
+    );
+  }
+
+  const isOwner = address && raffle.owner && address.toLowerCase() === raffle.owner.toLowerCase();
+  const canJoin = raffle.isActive && !raffle.isDrawn && !userJoined;
+  const canDraw = isOwner && raffle.isActive && !raffle.isDrawn && participants.length > 0;
   const canCancel = isOwner && raffle.isActive && !raffle.isDrawn;
 
-  if (loading) return <div className="flex justify-center items-center min-h-[60vh]"><Loader2 className="animate-spin" size={48} /></div>;
-  if (error) return <div className="text-red-500 text-center py-10">Error: {error}</div>;
-  if (!raffle) return <div className="text-center py-10">Raffle not found.</div>;
-
   return (
-    <div className="container mx-auto px-4 py-8">
-      <motion.button 
-        onClick={() => navigate('/raffles')} 
-        className="flex items-center gap-2 text-primary mb-6 font-semibold"
-        whileHover={{ x: -5 }}>
-        <ArrowLeft size={20} /> Back to Raffles
-      </motion.button>
+    <div className="min-h-screen py-8 px-4">
+      <div className="container max-w-4xl">
+        <button 
+          onClick={() => navigate('/raffles')} 
+          className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-8 font-medium transition-colors"
+        >
+          <ArrowLeft size={20} /> Back to Raffles
+        </button>
 
-      <motion.div initial={{opacity: 0, y: 20}} animate={{opacity: 1, y: 0}} transition={{duration: 0.5}} className="bg-card rounded-xl shadow-2xl overflow-hidden border border-border">
-        <div className="p-8">
-          <h1 className="text-4xl font-extrabold text-primary mb-2 truncate" title={raffle.name}>{raffle.name}</h1>
-          <p className="text-muted-foreground break-words">Created by: {raffle.owner}</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-8 bg-background/50">
-          {/* Stats Cards */}
-          <StatCard icon={<Users size={32} />} label="Participants" value={`${raffle.currentParticipants.toString()}/${raffle.maxParticipants.toString()}`} />
-          <StatCard icon={<Ticket size={32} />} label="Status" value={raffle.isActive ? 'Active' : 'Inactive'} color={raffle.isActive ? 'text-green-400' : 'text-red-400'} />
-          <StatCard icon={<Trophy size={32} />} label="Winner" value={raffle.isDrawn ? 'Drawn' : 'Not Drawn'} color={raffle.isDrawn ? 'text-blue-400' : 'text-gray-500'} />
-        </div>
-
-        {raffle.isDrawn && raffle.winner && (
-          <motion.div initial={{opacity: 0}} animate={{opacity: 1}} className="p-8 text-center bg-accent/20 border-t border-border">
-            <h2 className="text-2xl font-bold text-accent inline-flex items-center gap-2"><PartyPopper /> Winner <PartyPopper /></h2>
-            <p className="text-xl break-words font-mono mt-2">{raffle.winner}</p>
-          </motion.div>
-        )}
-
-        <div className="p-8 border-t border-border flex flex-col md:flex-row gap-4 items-center justify-center">
-          {/* Action Buttons */}
-          <AnimatePresence mode="wait">
-            {canJoin && <ActionButton onClick={() => handleAction(joinRaffle, 'Join')} text="Join Raffle" loading={actionLoading === 'Join'} />}          
-            {userJoined && !raffle.isDrawn && <p className="text-green-500 font-semibold text-center w-full">You have joined this raffle!</p>}
-            {canDraw && <ActionButton onClick={() => handleAction(drawWinner, 'Draw')} text="Draw Winner" loading={actionLoading === 'Draw'} variant="secondary" />} 
-            {canCancel && <ActionButton onClick={() => handleAction(cancelRaffle, 'Cancel')} text="Cancel Raffle" loading={actionLoading === 'Cancel'} variant="destructive" />}
-          </AnimatePresence>
-        </div>
-      </motion.div>
-
-      <motion.div initial={{opacity: 0}} animate={{opacity: 1, transition: {delay: 0.2}}} className="mt-8">
-        <h2 className="text-3xl font-bold mb-4">Participants ({participants.length})</h2>
-        {participants.length > 0 ? (
-          <div className="bg-card rounded-lg shadow-inner border border-border p-4 max-h-96 overflow-y-auto">
-            <ul className="space-y-2">
-              {participants.map((p, i) => <li key={i} className="text-muted-foreground break-words font-mono text-sm bg-background/50 p-2 rounded-md">{p}</li>)}
-            </ul>
+        <div className="card p-8 mb-6">
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h1 className="text-4xl font-bold">Raffle #{id}</h1>
+              {raffle.isActive && !raffle.isDrawn && (
+                <span className="badge-success">Active</span>
+              )}
+              {raffle.isDrawn && (
+                <span className="badge-info">Completed</span>
+              )}
+              {!raffle.isActive && (
+                <span className="badge-neutral">Cancelled</span>
+              )}
+            </div>
+            <p className="text-muted-foreground text-sm break-words">
+              Owner: {raffle.owner}
+            </p>
           </div>
-        ) : (
-          <div className="text-center py-12 text-muted-foreground bg-card/50 rounded-lg border border-border">
-            <Info size={32} className="mx-auto mb-2" />
-            <p>No one has joined this raffle yet.</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div className="stat-card">
+              <div className="flex items-center gap-3 mb-2">
+                <Users className="text-primary" size={24} />
+                <span className="text-sm font-medium text-muted-foreground">Participants</span>
+              </div>
+              <p className="text-2xl font-bold">
+                {raffle.currentParticipants.toString()}/{raffle.maxParticipants.toString()}
+              </p>
+            </div>
+
+            <div className="stat-card">
+              <div className="flex items-center gap-3 mb-2">
+                <Ticket className="text-primary" size={24} />
+                <span className="text-sm font-medium text-muted-foreground">Status</span>
+              </div>
+              <p className="text-2xl font-bold">
+                {raffle.isActive ? 'Open' : 'Closed'}
+              </p>
+            </div>
+
+            <div className="stat-card">
+              <div className="flex items-center gap-3 mb-2">
+                <Trophy className="text-primary" size={24} />
+                <span className="text-sm font-medium text-muted-foreground">Winner</span>
+              </div>
+              <p className="text-2xl font-bold">
+                {raffle.isDrawn ? 'Selected' : 'Pending'}
+              </p>
+            </div>
           </div>
-        )}
-      </motion.div>
+
+          {raffle.isDrawn && raffle.winner && (
+            <div className="alert-success mb-6">
+              <div className="flex items-center gap-3 mb-2">
+                <Trophy className="text-success" size={24} />
+                <h2 className="text-lg font-bold">Winner Selected!</h2>
+              </div>
+              <p className="text-sm break-words font-mono">{raffle.winner}</p>
+            </div>
+          )}
+
+          <div className="flex flex-col md:flex-row gap-3">
+            {canJoin && (
+              <button 
+                onClick={handleJoin} 
+                disabled={actionLoading} 
+                className="btn-primary flex-1"
+              >
+                {actionLoading ? 'Joining...' : 'Join Raffle'}
+              </button>
+            )}
+            {userJoined && (
+              <div className="alert-success flex-1 text-center">
+                <p className="font-semibold text-sm">✓ You've joined this raffle!</p>
+              </div>
+            )}
+            {canDraw && (
+              <button 
+                onClick={handleDraw} 
+                disabled={actionLoading} 
+                className="btn-success flex-1"
+              >
+                {actionLoading ? 'Drawing...' : 'Draw Winner'}
+              </button>
+            )}
+            {canCancel && (
+              <button 
+                onClick={handleCancel} 
+                disabled={actionLoading} 
+                className="btn-outline flex-1"
+              >
+                {actionLoading ? 'Cancelling...' : 'Cancel Raffle'}
+              </button>
+            )}
+          </div>
+
+          {error && (
+            <div className="alert-danger mt-4">
+              <p className="text-sm">{error}</p>
+            </div>
+          )}
+        </div>
+
+        <div className="card p-8">
+          <h2 className="text-2xl font-bold mb-6">
+            Participants ({participants.length})
+          </h2>
+          {participants.length > 0 ? (
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {participants.map((p, i) => (
+                <div key={i} className="bg-muted rounded-xl p-4 text-sm font-mono break-words">
+                  {p}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <Users className="mx-auto text-muted-foreground mb-3" size={48} />
+              <p className="text-muted-foreground">No participants yet</p>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
-
-// Helper components for UI consistency
-const StatCard = ({ icon, label, value, color }) => (
-  <div className="flex items-center gap-4 p-4 bg-card rounded-lg shadow-inner border border-border">
-    <div className="text-accent">{icon}</div>
-    <div>
-      <p className="text-muted-foreground text-sm">{label}</p>
-      <p className={`font-bold text-2xl ${color}`}>{value}</p>
-    </div>
-  </div>
-);
-
-const ActionButton = ({ onClick, text, loading, variant = 'primary' }) => {
-  const baseClasses = "w-full md:w-auto font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2";
-  const variants = {
-    primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
-    secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/90',
-    destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
-  };
-  return (
-    <motion.button
-      onClick={onClick}
-      disabled={loading}
-      className={`${baseClasses} ${variants[variant]} disabled:opacity-50 disabled:cursor-not-allowed`}
-      whileHover={{ scale: loading ? 1 : 1.05 }}
-      whileTap={{ scale: loading ? 1 : 0.95 }}
-    >
-      {loading ? <Loader2 className="animate-spin" /> : text}
-    </motion.button>
-  )
-}
 
 export default RaffleDetailPage;
