@@ -1,40 +1,42 @@
 import { Link } from 'react-router-dom';
-import { Home, Ticket, PlusSquare, Wallet } from 'lucide-react';
-import { useWeb3 } from '../contexts/Web3Context';
+import { useRaffle } from '../contexts/RaffleContext';
 
 const Navbar = () => {
-  const { connectWallet, address, disconnectWallet } = useWeb3();
+  const { account, isConnected, connectWallet, disconnect, chainId } = useRaffle();
+  
+  const CELO_CHAIN_ID = 42220; // Celo Mainnet
+  const isCorrectNetwork = chainId === CELO_CHAIN_ID;
+
+  const handleConnect = async () => {
+    try {
+      await connectWallet();
+    } catch (error) {
+      console.error("Failed to connect wallet:", error);
+      // You might want to show an error to the user
+    }
+  };
 
   return (
-    <nav className="bg-primary text-white p-4 shadow-md">
+    <nav className="bg-gray-800 text-white p-4">
       <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold text-secondary">Raffle DApp</Link>
-        <div className="flex space-x-4 items-center">
-          <Link to="/" className="flex items-center space-x-2 hover:text-secondary">
-            <Home size={20} />
-            <span>Home</span>
-          </Link>
-          <Link to="/raffles" className="flex items-center space-x-2 hover:text-secondary">
-            <Ticket size={20} />
-            <span>Browse</span>
-          </Link>
-          <Link to="/create" className="flex items-center space-x-2 hover:text-secondary">
-            <PlusSquare size={20} />
-            <span>Create</span>
-          </Link>
-          {address ? (
-            <button 
-              onClick={disconnectWallet}
-              className="bg-accent text-accent-foreground hover:bg-accent/90 py-2 px-4 rounded-md flex items-center space-x-2">
-              <Wallet size={20} />
-              <span>Disconnect</span>
-            </button>
+        <div className="flex items-center">
+          <Link to="/" className="text-2xl font-bold">RaffleDex</Link>
+          <div className="ml-10">
+            <Link to="/raffles" className="mr-4">Browse</Link>
+            <Link to="/create">Create</Link>
+          </div>
+        </div>
+        <div className="flex items-center">
+          {isConnected && isCorrectNetwork ? (
+            <div className="flex items-center">
+              <span className="mr-4">{`${account.substring(0, 6)}...${account.substring(account.length - 4)}`}</span>
+              <button onClick={disconnect} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Disconnect
+              </button>
+            </div>
           ) : (
-            <button 
-              onClick={connectWallet}
-              className="bg-accent text-accent-foreground hover:bg-accent/90 py-2 px-4 rounded-md flex items-center space-x-2">
-              <Wallet size={20} />
-              <span>Connect Wallet</span>
+            <button onClick={handleConnect} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              {isConnected && !isCorrectNetwork ? 'Switch to Celo' : 'Connect Wallet'}
             </button>
           )}
         </div>

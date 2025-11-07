@@ -17,6 +17,7 @@ This document outlines the development plan and progress for the RaffleDex front
 *   **Web3 Integration:**
     *   Set up a `Web3Context` to manage wallet state (provider, address, chainId, and error states).
     *   Implemented the wallet connection flow in the `Navbar`.
+    *   **Network Configuration:** Updated the application to use the Celo mainnet (Chain ID: 42220).
 *   **State Management:**
     *   Created a `RaffleContext` to manage the raffle contract, the list of created raffles across the application, and all raffle-related functions.
 *   **Routing:**
