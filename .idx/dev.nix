@@ -1,38 +1,41 @@
-# To learn more about how to use Nix to configure your environment
-# see: https://developers.google.com/idx/guides/customize-idx-env
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   # Which nixpkgs channel to use.
-  channel = "stable-24.05"; # or "unstable"
+  channel = "stable-23.11"; # Or "unstable"
+
   # Use https://search.nixos.org/packages to find packages
   packages = [
-    pkgs.nodejs_20
+    pkgs.nodejs_22 # Use a newer version of Node.js
   ];
+
   # Sets environment variables in the workspace
   env = {};
-  idx = {
-    # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
-    extensions = [
-      # "vscodevim.vim"
-      "google.gemini-cli-vscode-ide-companion"
+
+  # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
+  extensions = [
+    "dbaeumer.vscode-eslint"
+  ];
+
+  # Enable previews and customize configuration
+  previews = {
+    enable = true;
+    previews = [
+      {
+        # The name that shows up in the UI
+        name = "web";
+        # The command to run to start the preview
+        command = "npm run dev -- --port $PORT --host 0.0.0.0";
+        # The port that the preview will be available on
+        port = 3000;
+        # The type of preview, either "web" or "terminal"
+        type = "web";
+      }
     ];
-    workspace = {
-      # Runs when a workspace is first created with this `dev.nix` file
-      onCreate = {
-        npm-install = "npm i --no-audit --no-progress --timing";
-        # Open editors for the following files by default, if they exist:
-        default.openFiles = [ "src/App.tsx" "src/App.ts" "src/App.jsx" "src/App.js" ];
-      };
-      # To run something each time the workspace is (re)started, use the `onStart` hook
-    };
-    # Enable previews and customize configuration
-    previews = {
-      enable = true;
-      previews = {
-        web = {
-          command = ["npm" "run" "dev" "--" "--port" "$PORT" "--host" "0.0.0.0"];
-          manager = "web";
-        };
-      };
-    };
   };
+
+  # Defines the commands that should be run when the workspace starts
+  # E.g. `npm install`
+  idx.workspace.onStart = [
+    "npm install"
+  ];
 }
