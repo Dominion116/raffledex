@@ -20,8 +20,8 @@ export const RaffleProvider = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [chainId, setChainId] = useState(null);
 
-  // Celo Mainnet chainId is 42220, Alfajores Testnet is 44787
-  const CELO_CHAIN_ID = 44787; // Change to 42220 for mainnet
+  // Celo Mainnet chainId is 42220
+  const CELO_CHAIN_ID = 42220;
 
   // Initialize provider and check if wallet is already connected
   useEffect(() => {
@@ -145,7 +145,7 @@ export const RaffleProvider = ({ children }) => {
 
   const switchToCelo = async () => {
     try {
-      // Try to switch to Celo Alfajores testnet
+      // Try to switch to Celo Mainnet
       await window.ethereum.request({
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: `0x${CELO_CHAIN_ID.toString(16)}` }],
@@ -159,14 +159,14 @@ export const RaffleProvider = ({ children }) => {
             params: [
               {
                 chainId: `0x${CELO_CHAIN_ID.toString(16)}`,
-                chainName: 'Celo Alfajores Testnet',
+                chainName: 'Celo Mainnet',
                 nativeCurrency: {
                   name: 'CELO',
                   symbol: 'CELO',
                   decimals: 18,
                 },
-                rpcUrls: ['https://alfajores-forno.celo-testnet.org'],
-                blockExplorerUrls: ['https://alfajores.celoscan.io/'],
+                rpcUrls: ['https://forno.celo.org'],
+                blockExplorerUrls: ['https://celoscan.io'],
               },
             ],
           });
@@ -258,7 +258,7 @@ export const RaffleProvider = ({ children }) => {
       const readContract = contract || new ethers.Contract(
         RAFFLE_CONTRACT_ADDRESS,
         RAFFLE_ABI,
-        provider || new ethers.JsonRpcProvider('https://alfajores-forno.celo-testnet.org')
+        provider || new ethers.JsonRpcProvider('https://forno.celo.org')
       );
 
       const raffle = await readContract.getRaffle(raffleId);
@@ -284,7 +284,7 @@ export const RaffleProvider = ({ children }) => {
       const readContract = contract || new ethers.Contract(
         RAFFLE_CONTRACT_ADDRESS,
         RAFFLE_ABI,
-        provider || new ethers.JsonRpcProvider('https://alfajores-forno.celo-testnet.org')
+        provider || new ethers.JsonRpcProvider('https://forno.celo.org')
       );
 
       const participants = await readContract.getParticipants(raffleId);
@@ -299,8 +299,8 @@ export const RaffleProvider = ({ children }) => {
     try {
       const readContract = contract || new ethers.Contract(
         RAFFLE_CONTRACT_ADDRESS,
-        RAFFLE_ABI,
-        provider || new ethers.JsonRpcProvider('https://alfajores-forno.celo-testnet.org')
+        RAffle_ABI,
+        provider || new ethers.JsonRpcProvider('https://forno.celo.org')
       );
 
       const total = await readContract.getTotalRaffles();
@@ -316,7 +316,7 @@ export const RaffleProvider = ({ children }) => {
       const readContract = contract || new ethers.Contract(
         RAFFLE_CONTRACT_ADDRESS,
         RAFFLE_ABI,
-        provider || new ethers.JsonRpcProvider('https://alfajores-forno.celo-testnet.org')
+        provider || new ethers.JsonRpcProvider('https://forno.celo.org')
       );
 
       const address = userAddress || account;

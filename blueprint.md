@@ -18,6 +18,7 @@ This document outlines the development plan and progress for the RaffleDex front
     *   Set up a `Web3Context` to manage wallet state (provider, address, chainId, and error states).
     *   Implemented the wallet connection flow in the `Navbar`.
     *   **Network Configuration:** Updated the application to use the Celo mainnet (Chain ID: 42220).
+    *   **Network Switching:** Fixed the "Switch to Celo" functionality by correcting the network switching logic in the `Navbar` and updating the `RaffleContext` with the correct Celo mainnet configuration. This ensures users on an incorrect network are prompted to switch to the Celo mainnet.
 *   **State Management:**
     *   Created a `RaffleContext` to manage the raffle contract, the list of created raffles across the application, and all raffle-related functions.
 *   **Routing:**

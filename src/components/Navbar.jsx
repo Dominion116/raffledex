@@ -2,14 +2,18 @@ import { Link } from 'react-router-dom';
 import { useRaffle } from '../contexts/RaffleContext';
 
 const Navbar = () => {
-  const { account, isConnected, connectWallet, disconnect, chainId } = useRaffle();
+  const { account, isConnected, connectWallet, disconnect, chainId, switchToCelo } = useRaffle();
   
   const CELO_CHAIN_ID = 42220; // Celo Mainnet
   const isCorrectNetwork = chainId === CELO_CHAIN_ID;
 
   const handleConnect = async () => {
     try {
-      await connectWallet();
+      if (isConnected && !isCorrectNetwork) {
+        await switchToCelo();
+      } else {
+        await connectWallet();
+      }
     } catch (error) {
       console.error("Failed to connect wallet:", error);
       // You might want to show an error to the user
