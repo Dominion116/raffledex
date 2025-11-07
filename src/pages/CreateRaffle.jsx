@@ -1,39 +1,27 @@
 import { useState } from 'react';
-import { useWeb3 } from '../contexts/Web3Context';
-import { useRaffles } from '../contexts/RaffleContext';
-import { ethers } from 'ethers';
-import RaffleContract from '../contracts/Raffle.json';
+import { useNavigate } from 'react-router-dom';
+import { useRaffle } from '../contexts/RaffleContext';
 
 const CreateRaffle = () => {
-  const { provider } = useWeb3();
-  const { addRaffle } = useRaffles();
+  const { createRaffle } = useRaffle();
+  const navigate = useNavigate();
   const [maxParticipants, setMaxParticipants] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [raffleAddress, setRaffleAddress] = useState(null);
 
   const handleCreateRaffle = async () => {
-    if (!provider) {
-      setError('Provider not found. Please connect your wallet.');
+    if (!maxParticipants || Number(maxParticipants) <= 0) {
+      setError('Please enter a valid number of participants.');
       return;
     }
 
     setLoading(true);
     setError(null);
-    setRaffleAddress(null);
 
     try {
-      const signer = await provider.getSigner();
-      const factory = new ethers.ContractFactory(
-        RaffleContract.abi,
-        RaffleContract.bytecode,
-        signer
-      );
-      const contract = await factory.deploy(maxParticipants);
-      await contract.waitForDeployment();
-      const newRaffleAddress = contract.target;
-      setRaffleAddress(newRaffleAddress);
-      addRaffle({ address: newRaffleAddress, maxParticipants: maxParticipants });
+      await createRaffle(maxParticipants);
+      // On success, navigate to the browse page to see the new raffle
+      navigate('/raffles');
     } catch (err) {
       console.error("Error creating raffle:", err);
       setError(`Failed to create raffle: ${err.message}`);
@@ -44,31 +32,27 @@ const CreateRaffle = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">Create a New Raffle</h1>
-      <div className="max-w-md mx-auto">
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Max Participants</label>
+      <div className="max-w-md mx-auto bg-card p-8 rounded-xl shadow-lg">
+        <h1 className="text-3xl font-bold mb-6 text-center text-primary">Create a New Raffle</h1>
+        <div className="mb-6">
+          <label htmlFor="maxParticipants" className="block text-muted-foreground mb-2 font-semibold">Max Participants</label>
           <input
+            id="maxParticipants"
             type="number"
             value={maxParticipants}
             onChange={(e) => setMaxParticipants(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md"
+            className="w-full px-4 py-3 border rounded-lg focus:ring-primary focus:border-primary"
+            placeholder="e.g., 100"
           />
         </div>
         <button
           onClick={handleCreateRaffle}
           disabled={loading}
-          className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary/90 disabled:bg-gray-400"
+          className="w-full bg-accent text-accent-foreground py-3 px-4 rounded-lg font-bold hover:bg-accent/90 disabled:bg-gray-400 transition-colors shadow-md"
         >
           {loading ? 'Creating Raffle...' : 'Create Raffle'}
         </button>
-        {error && <p className="text-red-500 mt-4">{error}</p>}
-        {raffleAddress && (
-          <div className="mt-4 p-4 bg-green-100 rounded-md">
-            <p className="font-bold">Raffle created successfully!</p>
-            <p>Contract Address: {raffleAddress}</p>
-          </div>
-        )}
+        {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
       </div>
     </div>
   );

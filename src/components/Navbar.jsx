@@ -3,7 +3,7 @@ import { Home, Ticket, PlusSquare, Wallet } from 'lucide-react';
 import { useWeb3 } from '../contexts/Web3Context';
 
 const Navbar = () => {
-  const { connectWallet, connectedWallet, disconnect } = useWeb3();
+  const { connectWallet, address, disconnectWallet } = useWeb3();
 
   return (
     <nav className="bg-primary text-white p-4 shadow-md">
@@ -22,16 +22,16 @@ const Navbar = () => {
             <PlusSquare size={20} />
             <span>Create</span>
           </Link>
-          {connectedWallet ? (
+          {address ? (
             <button 
-              onClick={() => disconnect(connectedWallet)}
+              onClick={disconnectWallet}
               className="bg-accent text-accent-foreground hover:bg-accent/90 py-2 px-4 rounded-md flex items-center space-x-2">
               <Wallet size={20} />
               <span>Disconnect</span>
             </button>
           ) : (
             <button 
-              onClick={() => connectWallet()}
+              onClick={connectWallet}
               className="bg-accent text-accent-foreground hover:bg-accent/90 py-2 px-4 rounded-md flex items-center space-x-2">
               <Wallet size={20} />
               <span>Connect Wallet</span>

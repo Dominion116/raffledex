@@ -1,138 +1,162 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useState, useEffect, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useRaffle } from '../contexts/RaffleContext';
 import { useWeb3 } from '../contexts/Web3Context';
-import { ethers } from 'ethers';
-import RaffleContract from '../contracts/Raffle.json';
+import { Users, Ticket, Trophy, XCircle, ArrowLeft } from 'lucide-react';
 
 const RaffleDetailPage = () => {
   const { id } = useParams();
-  const { provider, address } = useWeb3();
+  const navigate = useNavigate();
+  const { 
+    getRaffle, 
+    getParticipants, 
+    hasUserJoined, 
+    joinRaffle, 
+    drawWinner, 
+    cancelRaffle
+  } = useRaffle();
+  const { address } = useWeb3();
+
   const [raffle, setRaffle] = useState(null);
   const [participants, setParticipants] = useState([]);
-  const [owner, setOwner] = useState(null);
-  const [winner, setWinner] = useState(null);
+  const [userJoined, setUserJoined] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [actionLoading, setActionLoading] = useState(false);
+
+  const fetchDetails = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const raffleId = Number(id);
+      const [raffleDetails, participantsList] = await Promise.all([
+        getRaffle(raffleId),
+        getParticipants(raffleId),
+      ]);
+
+      setRaffle(raffleDetails);
+      setParticipants(participantsList);
+
+      if (address) {
+        const joined = await hasUserJoined(raffleId, address);
+        setUserJoined(joined);
+      }
+    } catch (err) {
+      console.error("Error fetching raffle details:", err);
+      setError(`Failed to fetch raffle details: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  }, [id, getRaffle, getParticipants, hasUserJoined, address]);
 
   useEffect(() => {
-    const fetchRaffleDetails = async () => {
-      if (!provider) return;
+    fetchDetails();
+  }, [fetchDetails]);
 
-      setLoading(true);
-      setError(null);
-
-      try {
-        const contract = new ethers.Contract(id, RaffleContract.abi, provider);
-        const maxParticipants = await contract.maxParticipants();
-        const participantsCount = await contract.participantsCount();
-        const ownerAddress = await contract.owner();
-        const winnerAddress = await contract.winner();
-
-        const participantAddresses = [];
-        for (let i = 0; i < participantsCount; i++) {
-          const address = await contract.participants(i);
-          participantAddresses.push(address);
-        }
-
-        setRaffle({ address: id, maxParticipants: Number(maxParticipants) });
-        setParticipants(participantAddresses);
-        setOwner(ownerAddress);
-        if (winnerAddress !== ethers.ZeroAddress) {
-          setWinner(winnerAddress);
-        }
-
-      } catch (err) {
-        console.error("Error fetching raffle details:", err);
-        setError(`Failed to fetch raffle details: ${err.message}`);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRaffleDetails();
-  }, [id, provider]);
-
-  const handleEnterRaffle = async () => {
-    if (!provider) {
-      setError('Provider not found. Please connect your wallet.');
-      return;
-    }
-
+  const handleJoin = async () => {
+    setActionLoading(true);
     try {
-      const signer = await provider.getSigner();
-      const contract = new ethers.Contract(id, RaffleContract.abi, signer);
-      const tx = await contract.enter();
-      await tx.wait();
-      window.location.reload();
+      await joinRaffle(Number(id));
+      await fetchDetails(); // Refresh details
     } catch (err) {
-      console.error("Error entering raffle:", err);
-      setError(`Failed to enter raffle: ${err.message}`);
+      console.error('Error joining raffle:', err);
+      setError(`Failed to join raffle: ${err.message}`);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+  
+  const handleDraw = async () => {
+    setActionLoading(true);
+    try {
+      await drawWinner(Number(id));
+      await fetchDetails();
+    } catch (err) {
+      console.error('Error drawing winner:', err);
+      setError(`Failed to draw winner: ${err.message}`);
+    } finally {
+      setActionLoading(false);
     }
   };
 
-  const handlePickWinner = async () => {
-    if (!provider) {
-      setError('Provider not found. Please connect your wallet.');
-      return;
-    }
-
+  const handleCancel = async () => {
+    setActionLoading(true);
     try {
-      const signer = await provider.getSigner();
-      const contract = new ethers.Contract(id, RaffleContract.abi, signer);
-      const tx = await contract.pickWinner();
-      await tx.wait();
-      window.location.reload();
+      await cancelRaffle(Number(id));
+      await fetchDetails();
     } catch (err) {
-      console.error("Error picking winner:", err);
-      setError(`Failed to pick winner: ${err.message}`);
+      console.error('Error cancelling raffle:', err);
+      setError(`Failed to cancel raffle: ${err.message}`);
+    } finally {
+      setActionLoading(false);
     }
   };
 
-  const isOwner = address && owner && address.toLowerCase() === owner.toLowerCase();
+  if (loading) return <div className="text-center py-10">Loading raffle details...</div>;
+  if (error) return <div className="text-red-500 text-center py-10">Error: {error}</div>;
+  if (!raffle) return <div className="text-center py-10">Raffle not found.</div>;
 
-  if (loading) return <div className="container mx-auto p-4">Loading...</div>;
-  if (error) return <div className="container mx-auto p-4 text-red-500">Error: {error}</div>;
-  if (!raffle) return <div className="container mx-auto p-4">Raffle not found.</div>;
+  const isOwner = address && raffle.owner && address.toLowerCase() === raffle.owner.toLowerCase();
+  const canJoin = raffle.isActive && !raffle.isDrawn && !userJoined;
+  const canDraw = isOwner && raffle.isActive && !raffle.isDrawn && participants.length > 0;
+  const canCancel = isOwner && raffle.isActive && !raffle.isDrawn;
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">Raffle Details</h1>
-      <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-        <p className="text-lg"><span className="font-bold">Contract Address:</span> {raffle.address}</p>
-        <p className="text-lg"><span className="font-bold">Max Participants:</span> {raffle.maxParticipants}</p>
-        <p className="text-lg"><span className="font-bold">Current Participants:</span> {participants.length}</p>
-        {winner && <p className="text-lg font-bold text-green-600"><span className="font-bold">Winner:</span> {winner}</p>}
+      <button 
+        onClick={() => navigate('/raffles')} 
+        className="flex items-center gap-2 text-primary mb-6 font-semibold"
+        whileHover={{ x: -5 }}>
+        <ArrowLeft size={20} /> Back to Raffles
+      </button>
+
+      <div initial={{opacity: 0, y: 20}} animate={{opacity: 1, y: 0}} transition={{duration: 0.5}} className="bg-card rounded-xl shadow-2xl overflow-hidden">
+        <div className="p-8">
+          <h1 className="text-4xl font-extrabold text-primary mb-2">Raffle #{id}</h1>
+          <p className="text-muted-foreground break-words">Owned by: {raffle.owner}</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-8 bg-background/50">
+          <div className="flex items-center gap-4 p-4 bg-card rounded-lg shadow-inner">
+            <Users className="text-accent" size={40} />
+            <div>
+              <p className="font-bold text-2xl">{raffle.currentParticipants.toString()}/{raffle.maxParticipants.toString()}</p>
+              <p className="text-muted-foreground">Participants</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 p-4 bg-card rounded-lg shadow-inner">
+            <Ticket className="text-accent" size={40} />
+            <p className={`font-bold text-2xl ${raffle.isActive ? 'text-green-500' : 'text-red-500'}`}>{raffle.isActive ? 'Active' : 'Inactive'}</p>
+          </div>
+          <div className="flex items-center gap-4 p-4 bg-card rounded-lg shadow-inner">
+            <Trophy className="text-accent" size={40} />
+            <p className={`font-bold text-2xl ${raffle.isDrawn ? 'text-blue-500' : 'text-gray-500'}`}>{raffle.isDrawn ? 'Drawn' : 'Not Drawn'}</p>
+          </div>
+        </div>
+
+        {raffle.isDrawn && raffle.winner && (
+          <div className="p-8 text-center bg-accent/20">
+            <h2 className="text-2xl font-bold text-accent">Winner</h2>
+            <p className="text-xl break-words">{raffle.winner}</p>
+          </div>
+        )}
+
+        <div className="p-8 flex flex-col md:flex-row gap-4">
+          {canJoin && <button onClick={handleJoin} disabled={actionLoading} className="btn-primary w-full">Join Raffle</button>}
+          {userJoined && <p className="text-green-500 font-semibold text-center w-full">You have joined this raffle!</p>}
+          {canDraw && <button onClick={handleDraw} disabled={actionLoading} className="btn-secondary w-full">Draw Winner</button>}
+          {canCancel && <button onClick={handleCancel} disabled={actionLoading} className="btn-danger w-full">Cancel Raffle</button>}
+        </div>
       </div>
 
-      <div className="mb-6">
-        {!winner && (
-          <button 
-            onClick={handleEnterRaffle}
-            className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 mr-4"
-          >
-            Enter Raffle
-          </button>
-        )}
-        {isOwner && !winner && (
-          <button 
-            onClick={handlePickWinner}
-            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-          >
-            Pick Winner
-          </button>
-        )}
-      </div>
-
-      <div>
-        <h2 className="text-2xl font-bold mb-4">Participants</h2>
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold mb-4">Participants ({participants.length})</h2>
         {participants.length > 0 ? (
-          <ul className="list-disc pl-5">
-            {participants.map((participant, index) => (
-              <li key={index} className="text-gray-700">{participant}</li>
-            ))}
+          <ul className="bg-card rounded-lg shadow-inner p-4 space-y-2">
+            {participants.map((p, i) => <li key={i} className="text-muted-foreground break-words">{p}</li>)}
           </ul>
         ) : (
-          <p>No participants yet.</p>
+          <p>No one has joined yet.</p>
         )}
       </div>
     </div>

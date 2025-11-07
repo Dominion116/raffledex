@@ -1,8 +1,8 @@
-import { useRaffles } from '../contexts/RaffleContext';
+import { useRaffle } from '../contexts/RaffleContext';
 import RaffleCard from '../components/RaffleCard';
 
 const BrowseRafflesPage = () => {
-  const { raffles } = useRaffles();
+  const { raffles } = useRaffle();
 
   return (
     <div className="container mx-auto px-4 py-8">

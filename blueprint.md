@@ -8,29 +8,29 @@ This document outlines the development plan and progress for the RaffleDex front
 
 *   **Project Initialization:** A standard Vite + React project has been set up.
 *   **Blueprint:** This `blueprint.md` file has been created to track the project's progress.
-*   **Dependency Installation:** Installed `ethers`, `@web3-onboard/react`, `react-router-dom`, `tailwindcss`, `shadcn/ui`, `lucide-react`, `@tanstack/react-query`, and `framer-motion`.
-*   **Styling & Theming:** Configured Tailwind CSS and initialized `shadcn/ui` for a consistent and modern design system.
+*   **Dependency Installation:** Installed `ethers`, `react-router-dom`, `tailwindcss`, `lucide-react`, and `framer-motion`.
+*   **Styling & Theming:** Configured Tailwind CSS for a consistent and modern design system.
 *   **Project Structure:** Established a clean project structure with dedicated folders for `components`, `pages`, `contexts`, and `contracts`.
 *   **Core Components:**
     *   Created layout components: `Navbar` and `Footer`.
-    *   Implemented UI components via `shadcn/ui`.
     *   Created application-specific components: `RaffleCard`.
 *   **Web3 Integration:**
-    *   Set up a `Web3Context` to manage wallet state (provider, signer, address).
+    *   Set up a `Web3Context` to manage wallet state (provider, address, chainId, and error states).
     *   Implemented the wallet connection flow in the `Navbar`.
 *   **State Management:**
-    *   Created a `RaffleContext` to manage the list of created raffles across the application.
+    *   Created a `RaffleContext` to manage the raffle contract, the list of created raffles across the application, and all raffle-related functions.
 *   **Routing:**
     *   Configured `react-router-dom` with the main application routes: `/` (Landing), `/raffles` (Browse), `/create` (Create), `/raffles/:id` (Details), and a `*` catch-all for a `NotFoundPage`.
 *   **Page Implementation:**
     *   **Landing Page:** Created a visually appealing entry point for the application.
-    *   **Create Raffle Page:** Implemented a form to deploy a new Raffle smart contract. The new raffle is added to the global state.
+    *   **Create Raffle Page:** Implemented a form to create a new raffle.
     *   **Browse Raffles Page:** Displays a list of created raffles using data from the `RaffleContext`.
     *   **Raffle Detail Page:** Fetches and displays detailed information for a specific raffle from the blockchain, including participant count, a button to enter the raffle, and winner information.
 *   **Smart Contract Integration:**
     *   Included the `Raffle.json` ABI for interaction with the deployed smart contracts.
-    *   Implemented contract deployment (`CreateRaffle`) and interaction (`RaffleDetailPage`, `RaffleCard`).
+    *   Implemented contract interaction in `RaffleContext`.
     *   **Winner Selection:** Implemented the functionality for the raffle creator to pick a winner and display the winner's address.
+*   **Code Refactoring:** Refactored the `useWeb3` and `useRaffle` hooks into `Web3Context` and `RaffleContext` respectively, for better code organization and maintainability.
 
 ## Final Phase: Polish and Deployment
 
