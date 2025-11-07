@@ -9,7 +9,9 @@ This document outlines the development plan and progress for the RaffleDex front
 *   **Project Initialization:** A standard Vite + React project has been set up.
 *   **Blueprint:** This `blueprint.md` file has been created to track the project's progress.
 *   **Dependency Installation:** Installed `ethers`, `react-router-dom`, `tailwindcss`, `lucide-react`, and `framer-motion`.
-*   **Styling & Theming:** Configured Tailwind CSS for a consistent and modern design system.
+*   **Styling & Theming:**
+    *   Configured Tailwind CSS for a consistent and modern design system.
+    *   Fixed an issue where the theme was not being applied by importing the main `index.css` file into the application's entry point (`src/main.jsx`).
 *   **Project Structure:** Established a clean project structure with dedicated folders for `components`, `pages`, `contexts`, and `contracts`.
 *   **Core Components:**
     *   Created layout components: `Navbar` and `Footer`.
