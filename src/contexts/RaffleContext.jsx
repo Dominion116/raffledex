@@ -181,13 +181,13 @@ export const RaffleProvider = ({ children }) => {
   };
 
   // Contract interaction functions
-  const createRaffle = async (maxParticipants) => {
+  const createRaffle = async (name, maxParticipants) => {
     try {
       if (!contract || !signer) {
         throw new Error('Wallet not connected');
       }
 
-      const tx = await contract.createRaffle(maxParticipants);
+      const tx = await contract.createRaffle(name, maxParticipants);
       const receipt = await tx.wait();
       
       // Extract raffle ID from events
@@ -264,14 +264,16 @@ export const RaffleProvider = ({ children }) => {
       const raffle = await readContract.getRaffle(raffleId);
       
       return {
-        owner: raffle[0],
-        maxParticipants: Number(raffle[1]),
-        currentParticipants: Number(raffle[2]),
-        winner: raffle[3],
-        isActive: raffle[4],
-        isDrawn: raffle[5],
-        createdAt: Number(raffle[6]),
-        drawnAt: Number(raffle[7]),
+        id: raffleId,
+        name: raffle[0],
+        owner: raffle[1],
+        maxParticipants: Number(raffle[2]),
+        currentParticipants: Number(raffle[3]),
+        winner: raffle[4],
+        isActive: raffle[5],
+        isDrawn: raffle[6],
+        createdAt: Number(raffle[7]),
+        drawnAt: Number(raffle[8]),
       };
     } catch (error) {
       console.error('Error getting raffle:', error);

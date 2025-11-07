@@ -13,10 +13,10 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 function App() {
   return (
     <BrowserRouter>
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col min-h-screen bg-background text-foreground">
         <Navbar />
         <main className="flex-grow">
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div className="text-center text-lg p-8">Loading...</div>}>
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/raffles" element={<BrowseRafflesPage />} />
