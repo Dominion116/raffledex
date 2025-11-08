@@ -7,7 +7,7 @@ import { RaffleProvider } from './contexts/RaffleContext';
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <RaffleProvider>
-        <App />
+      <App />
     </RaffleProvider>
   </React.StrictMode>
 );
