@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRaffle } from '../contexts/RaffleContext';
 
 const CreateRaffle = () => {
-  const { createRaffle, isConnected, connectWallet, account } = useRaffle();
+  const { createRaffle, isConnected, address } = useRaffle();
   const navigate = useNavigate();
   const [maxParticipants, setMaxParticipants] = useState('');
   const [loading, setLoading] = useState(false);
@@ -47,14 +47,6 @@ const CreateRaffle = () => {
     }
   };
 
-  const handleConnectWallet = async () => {
-    try {
-      await connectWallet();
-    } catch (err) {
-      setError(`Failed to connect wallet: ${err.message}`);
-    }
-  };
-
   return (
     <div className="min-h-screen py-16 px-4">
       <div className="container max-w-lg mx-auto">
@@ -68,20 +60,14 @@ const CreateRaffle = () => {
 
           {!isConnected ? (
             <div className="alert-warning mb-6">
-              <p className="text-sm font-medium mb-3">
-                Connect your wallet to create a raffle
+              <p className="text-sm font-medium text-center">
+                Please connect your wallet using the button in the navigation bar to create a raffle.
               </p>
-              <button
-                onClick={handleConnectWallet}
-                className="btn-primary w-full"
-              >
-                Connect Wallet
-              </button>
             </div>
           ) : (
             <div className="alert-success mb-6">
               <p className="text-sm font-semibold">
-                🟢 Connected: {account?.slice(0, 6)}...{account?.slice(-4)}
+                🟢 Connected: {address?.slice(0, 6)}...{address?.slice(-4)}
               </p>
             </div>
           )}
