@@ -20,7 +20,7 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-hook-form": "^7.66.0",
-    "react-router-dom": "^7.9.5",
+    "react-router-dom": "^6.23.0",
     "solc": "^0.8.30",
     "zod": "^3.25.76"
   },
