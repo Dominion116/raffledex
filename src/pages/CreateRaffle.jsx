@@ -29,7 +29,7 @@ const CreateRaffle = () => {
     setError(null);
 
     try {
-      const result = await createRaffle(maxParticipants);
+      const result = await createRaffle(Number(maxParticipants));
       alert(`Raffle created successfully! Raffle ID: ${result.raffleId}`);
       navigate(`/raffle/${result.raffleId}`);
     } catch (err) {
