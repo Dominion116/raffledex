@@ -2,7 +2,7 @@ import { createAppKit } from "@reown/appkit/react";
 import { EthersAdapter } from "@reown/appkit-adapter-ethers";
 import { arbitrum, mainnet } from "@reown/appkit/networks";
 
-const projectId = "42d8e6be9b9fc98812a247632e46f37b";
+const projectId = "35c18b84fd9706f0b560fe2ae76bf72c";
 
 const networks = [arbitrum, mainnet];
 
