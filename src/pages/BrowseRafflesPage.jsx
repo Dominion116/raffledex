@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useRaffle } from '../contexts/RaffleContext';
 import RaffleCard from '../components/RaffleCard';
 import { Ticket, Loader2 } from 'lucide-react';
@@ -30,12 +31,9 @@ const BrowseRafflesPage = () => {
           <div className="text-center py-20">
             <Ticket className="mx-auto text-muted-foreground mb-4" size={64} />
             <p className="text-muted-foreground text-lg mb-6">No raffles available</p>
-            <button
-              onClick={() => window.location.href = '/create'}
-              className="btn-primary"
-            >
+            <Link to="/create" className="btn-primary">
               Create First Raffle
-            </button>
+            </Link>
           </div>
         )}
       </div>
