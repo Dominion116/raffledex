@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useRaffle } from '../contexts/RaffleContext';
-import { useWeb3 } from '../contexts/Web3Context';
 import { Users, Ticket, Trophy, ArrowLeft } from 'lucide-react';
 
 const RaffleDetailPage = () => {
@@ -13,9 +12,9 @@ const RaffleDetailPage = () => {
     hasUserJoined, 
     joinRaffle, 
     drawWinner, 
-    cancelRaffle
+    cancelRaffle,
+    address
   } = useRaffle();
-  const { address } = useWeb3();
 
   const [raffle, setRaffle] = useState(null);
   const [participants, setParticipants] = useState([]);
