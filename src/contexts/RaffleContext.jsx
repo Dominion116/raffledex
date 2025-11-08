@@ -19,6 +19,8 @@ export const RaffleProvider = ({ children }) => {
   const [account, setAccount] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [chainId, setChainId] = useState(null);
+  const [raffles, setRaffles] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Celo Mainnet chainId is 42220
   const CELO_CHAIN_ID = 42220;
@@ -32,10 +34,10 @@ export const RaffleProvider = ({ children }) => {
 
         // Check if already connected
         try {
-          const accounts = await window.ethereum.request({ 
-            method: 'eth_accounts' 
+          const accounts = await window.ethereum.request({
+            method: 'eth_accounts'
           });
-          
+
           if (accounts.length > 0) {
             const web3Signer = await web3Provider.getSigner();
             setSigner(web3Signer);
@@ -56,6 +58,8 @@ export const RaffleProvider = ({ children }) => {
           }
         } catch (error) {
           console.error('Error checking connection:', error);
+        } finally {
+            setLoading(false);
         }
       }
     };
@@ -75,6 +79,13 @@ export const RaffleProvider = ({ children }) => {
       };
     }
   }, []);
+
+  // Fetch all raffles when contract is available
+  useEffect(() => {
+    if (contract) {
+      getAllRaffles();
+    }
+  }, [contract]);
 
   const handleAccountsChanged = (accounts) => {
     if (accounts.length === 0) {
@@ -190,14 +201,14 @@ export const RaffleProvider = ({ children }) => {
       // Contract only takes maxParticipants parameter
       const tx = await contract.createRaffle(maxParticipants);
       const receipt = await tx.wait();
-      
+
       // Extract raffle ID from events
       const event = receipt.logs.find(
         log => log.fragment && log.fragment.name === 'RaffleCreated'
       );
-      
+
       const raffleId = event ? event.args[0] : null;
-      
+
       return { success: true, raffleId, txHash: receipt.hash };
     } catch (error) {
       console.error('Error creating raffle:', error);
@@ -213,7 +224,7 @@ export const RaffleProvider = ({ children }) => {
 
       const tx = await contract.joinRaffle(raffleId);
       const receipt = await tx.wait();
-      
+
       return { success: true, txHash: receipt.hash };
     } catch (error) {
       console.error('Error joining raffle:', error);
@@ -229,7 +240,7 @@ export const RaffleProvider = ({ children }) => {
 
       const tx = await contract.drawWinner(raffleId);
       const receipt = await tx.wait();
-      
+
       return { success: true, txHash: receipt.hash };
     } catch (error) {
       console.error('Error drawing winner:', error);
@@ -245,7 +256,7 @@ export const RaffleProvider = ({ children }) => {
 
       const tx = await contract.cancelRaffle(raffleId);
       const receipt = await tx.wait();
-      
+
       return { success: true, txHash: receipt.hash };
     } catch (error) {
       console.error('Error cancelling raffle:', error);
@@ -263,7 +274,7 @@ export const RaffleProvider = ({ children }) => {
       );
 
       const raffle = await readContract.getRaffle(raffleId);
-      
+
       // Contract returns: owner, maxParticipants, currentParticipants, winner, isActive, isDrawn, createdAt, drawnAt
       return {
         id: raffleId,
@@ -314,6 +325,47 @@ export const RaffleProvider = ({ children }) => {
     }
   };
 
+  const getAllRaffles = async () => {
+    setLoading(true);
+    try {
+      const readContract =
+        contract ||
+        new ethers.Contract(
+          RAFFLE_CONTRACT_ADDRESS,
+          RAFFLE_ABI,
+          provider || new ethers.JsonRpcProvider('https://forno.celo.org')
+        );
+
+      const totalRaffles = await readContract.getTotalRaffles();
+      const promises = [];
+      for (let i = 0; i < totalRaffles; i++) {
+        promises.push(readContract.getRaffle(i));
+      }
+
+      const results = await Promise.all(promises);
+
+      const rafflesData = results.map((raffle, index) => ({
+        id: index,
+        owner: raffle[0],
+        maxParticipants: Number(raffle[1]),
+        currentParticipants: Number(raffle[2]),
+        winner: raffle[3],
+        isActive: raffle[4],
+        isDrawn: raffle[5],
+        createdAt: Number(raffle[6]),
+        drawnAt: Number(raffle[7]),
+      }));
+
+      setRaffles(rafflesData);
+      return rafflesData;
+    } catch (error) {
+      console.error('Error getting all raffles:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const hasUserJoined = async (raffleId, userAddress) => {
     try {
       const readContract = contract || new ethers.Contract(
@@ -340,6 +392,8 @@ export const RaffleProvider = ({ children }) => {
     account,
     isConnected,
     chainId,
+    raffles, // Expose raffles
+    loading,
     connectWallet,
     disconnect,
     switchToCelo,
@@ -348,6 +402,7 @@ export const RaffleProvider = ({ children }) => {
     drawWinner,
     cancelRaffle,
     getRaffle,
+    getAllRaffles, // Expose getAllRaffles
     getParticipants,
     getTotalRaffles,
     hasUserJoined,

@@ -1,9 +1,9 @@
 import { useRaffle } from '../contexts/RaffleContext';
 import RaffleCard from '../components/RaffleCard';
-import { Ticket } from 'lucide-react';
+import { Ticket, Loader2 } from 'lucide-react';
 
 const BrowseRafflesPage = () => {
-  const { raffles } = useRaffle();
+  const { raffles, loading } = useRaffle();
 
   return (
     <div className="min-h-screen py-16 px-4">
@@ -15,7 +15,12 @@ const BrowseRafflesPage = () => {
           </p>
         </div>
 
-        {raffles.length > 0 ? (
+        {loading ? (
+          <div className="text-center py-20">
+            <Loader2 className="mx-auto h-12 w-12 animate-spin" />
+            <p className="text-muted-foreground text-lg mt-4">Loading raffles...</p>
+          </div>
+        ) : raffles.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {raffles.map((raffle, index) => (
               <RaffleCard key={index} raffle={raffle} />
@@ -25,7 +30,7 @@ const BrowseRafflesPage = () => {
           <div className="text-center py-20">
             <Ticket className="mx-auto text-muted-foreground mb-4" size={64} />
             <p className="text-muted-foreground text-lg mb-6">No raffles available</p>
-            <button 
+            <button
               onClick={() => window.location.href = '/create'}
               className="btn-primary"
             >
