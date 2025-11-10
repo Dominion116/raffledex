@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useRaffle } from '../contexts/RaffleContext';
 import RaffleCard from '../components/RaffleCard';
+import RaffleCardSkeleton from '../components/RaffleCardSkeleton';
 import { Ticket, Loader2 } from 'lucide-react';
 
 const BrowseRafflesPage = () => {
@@ -17,9 +18,10 @@ const BrowseRafflesPage = () => {
         </div>
 
         {loading ? (
-          <div className="text-center py-20">
-            <Loader2 className="mx-auto h-12 w-12 animate-spin" />
-            <p className="text-muted-foreground text-lg mt-4">Loading raffles...</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <RaffleCardSkeleton key={i} />
+            ))}
           </div>
         ) : raffles.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -30,7 +32,8 @@ const BrowseRafflesPage = () => {
         ) : (
           <div className="text-center py-20">
             <Ticket className="mx-auto text-muted-foreground mb-4" size={64} />
-            <p className="text-muted-foreground text-lg mb-6">No raffles available</p>
+            <h2 className="text-3xl font-bold mb-2">No Raffles Yet</h2>
+            <p className="text-muted-foreground text-lg mb-6">Be the first to create a new raffle!</p>
             <Link to="/create" className="btn-primary">
               Create First Raffle
             </Link>
