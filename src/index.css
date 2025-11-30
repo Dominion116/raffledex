@@ -204,25 +204,40 @@
   }
 }
 
-/* Small modern button component to use across the app */
+/* Standard pill-shaped button component used across the app */
 @layer components {
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem; /* matches gap-2 */
-    border-radius: var(--radius-sm);
-    padding: 0.5rem 1rem; /* px-4 py-2 */
+    border-radius: 9999px; /* pill shape */
+    padding: 0.625rem 1.25rem; /* 10px 20px; standard size */
     font-size: 0.875rem; /* text-sm */
-    font-weight: 500; /* medium */
-    box-shadow: 0 1px 2px rgba(16,24,40,0.04);
-    transition: all 0.15s ease;
+    font-weight: 600; /* semibold */
+    box-shadow: 0 2px 8px rgba(16,24,40,0.08);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn:hover {
+    box-shadow: 0 4px 12px rgba(16,24,40,0.12);
+    transform: translateY(-1px);
+  }
+
+  .btn:active {
+    transform: translateY(0);
   }
 
   .btn-primary {
     background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)));
     color: white;
-    box-shadow: 0 6px 20px rgba(99,102,241,0.14);
+    box-shadow: 0 4px 16px rgba(99,102,241,0.2);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 6px 20px rgba(99,102,241,0.28);
   }
 
   .card-modern {
@@ -231,8 +246,82 @@
     border-radius: var(--radius);
     box-shadow: var(--card-shadow);
   }
-}
 
-@layer components {
-  /* ... all your existing component styles ... */
+  /* Legacy card utility used throughout the app; keep it responsive */
+  .card {
+    background-color: hsl(var(--card));
+    color: hsl(var(--card-foreground));
+    border-radius: var(--radius);
+    box-shadow: var(--card-shadow);
+    padding: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .card {
+      padding: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .card {
+      padding: 2rem;
+    }
+  }
+
+  /* Container helper to standardize page width and side padding */
+  .container {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Basic input style */
+  .input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid hsl(var(--border));
+    background: hsl(var(--input));
+    color: hsl(var(--foreground));
+    outline: none;
+  }
+
+  .input:focus {
+    box-shadow: 0 0 0 4px hsl(var(--ring) / 0.12);
+    border-color: hsl(var(--ring));
+  }
+
+  /* Alerts and badges */
+  .alert-success { background: hsl(var(--success) / 0.06); border-radius: var(--radius-sm); padding: 0.75rem; }
+  .alert-warning { background: hsl(40 90% 85% / 0.12); border-radius: var(--radius-sm); padding: 0.75rem; }
+  .alert-danger { background: hsl(0 80% 60% / 0.06); border-radius: var(--radius-sm); padding: 0.75rem; }
+
+  .badge-success { background: hsl(var(--success)); color: white; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; }
+  .badge-info { background: hsl(210 80% 56%); color: white; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; }
+  .badge-neutral { background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; }
+
+  .btn-outline {
+    background: transparent;
+    border: 1.5px solid hsl(var(--border));
+    color: hsl(var(--foreground));
+    border-radius: 9999px;
+    padding: 0.625rem 1.25rem;
+  }
+
+  .btn-outline:hover {
+    background: hsl(var(--muted));
+  }
+
+  .btn-success {
+    background: hsl(var(--success));
+    color: hsl(var(--success-foreground));
+    border-radius: 9999px;
+    padding: 0.625rem 1.25rem;
+  }
+
+  .btn-success:hover {
+    box-shadow: 0 4px 12px hsl(var(--success) / 0.3);
+  }
 }
