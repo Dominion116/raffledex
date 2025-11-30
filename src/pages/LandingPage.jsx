@@ -21,11 +21,11 @@ const LandingPage = () => {
               Every entry is verifiable, every draw is transparent.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link to="/raffles" className="btn-lime text-base px-8 py-4 w-full sm:w-auto inline-flex items-center justify-center gap-2">
+              <Link to="/raffles" className="btn-lime w-full sm:w-auto">
                 Browse raffles
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-4 h-4" />
               </Link>
-              <Link to="/create" className="btn-outline text-base px-8 py-4 w-full sm:w-auto inline-flex items-center justify-center">
+              <Link to="/create" className="btn-outline w-full sm:w-auto">
                 Create raffle
               </Link>
             </div>
@@ -157,11 +157,11 @@ const LandingPage = () => {
               Create your first raffle or participate in existing ones today.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link to="/raffles" className="bg-[#bee800] text-black px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-[#d4ff00] transition-colors w-full sm:w-auto text-center text-sm sm:text-base inline-flex items-center justify-center gap-2">
+              <Link to="/raffles" className="btn-lime w-full sm:w-auto">
                 Explore raffles
                 <ChevronRight className="w-4 h-4" />
               </Link>
-              <Link to="/create" className="bg-white text-black px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-gray-100 transition-colors w-full sm:w-auto text-center text-sm sm:text-base">
+              <Link to="/create" className="bg-white text-black px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors w-full sm:w-auto inline-flex items-center justify-center gap-2">
                 Create raffle
               </Link>
             </div>
