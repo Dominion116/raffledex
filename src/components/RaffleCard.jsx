@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 
 const RaffleCard = ({ raffle }) => {
   if (!raffle) {
@@ -12,13 +11,10 @@ const RaffleCard = ({ raffle }) => {
   const isSoldOut = currentParticipants >= maxParticipants;
 
   return (
-    <motion.div
-      whileHover={{ scale: 1.02, y: -4 }}
-      transition={{ type: "spring", stiffness: 300 }}
-    >
+    <div className="hover-scale">
       <Link
         to={`/raffles/${raffleId}`}
-        className="card-modern border border-border p-6 hover:shadow-xl transition-shadow flex flex-col h-full"
+        className="card-modern border border-border p-4 md:p-6 hover:shadow-xl transition-shadow flex flex-col h-full"
       >
         <div className="flex-grow">
           <div className="flex justify-between items-start mb-3">
@@ -49,7 +45,7 @@ const RaffleCard = ({ raffle }) => {
           </div>
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 };
 
