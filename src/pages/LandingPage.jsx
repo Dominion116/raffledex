@@ -7,7 +7,7 @@ const LandingPage = () => {
       {/* Hero Section */}
       <section className="pt-20 pb-16 md:pt-28 md:pb-20 lg:pt-32 lg:pb-24">
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-          <div className="text-center max-w-5xl mx-auto">
+          <div className="text-center mx-auto" style={{maxWidth: '56rem'}}>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#bee800]/10 border border-[#bee800]/20 mb-8">
               <span className="text-sm font-medium">Powered by Celo blockchain</span>
             </div>
@@ -35,7 +35,7 @@ const LandingPage = () => {
 
       {/* Stats Section */}
       <section className="py-12 md:py-16 border-y border-gray-200 bg-white">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 text-center">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
             <div className="text-center">
               <div className="text-4xl md:text-5xl lg:text-6xl font-bold mb-3">100%</div>
@@ -58,9 +58,9 @@ const LandingPage = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 md:py-28 lg:py-32">
+      <section className="py-20 md:py-28 lg:py-32 text-center">
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-          <div className="text-center mb-16 md:mb-20">
+          <div className="mb-16 md:mb-20">
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Why RaffleDex?</h2>
             <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
               Built for transparency and fairness with blockchain technology
@@ -102,9 +102,9 @@ const LandingPage = () => {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 md:py-28 lg:py-32 bg-white">
+      <section className="py-20 md:py-28 lg:py-32 bg-white text-center">
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-          <div className="text-center mb-16 md:mb-20">
+          <div className="mb-16 md:mb-20">
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">How it works</h2>
             <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
               Getting started with RaffleDex is simple and transparent
@@ -112,7 +112,7 @@ const LandingPage = () => {
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16 max-w-6xl mx-auto">
-            <div className="flex flex-col items-center text-center">
+            <div className="flex flex-col items-center">
               <div className="w-20 h-20 rounded-full bg-[#bee800] flex items-center justify-center text-3xl font-bold text-black mb-8 shadow-lg">
                 1
               </div>
@@ -122,7 +122,7 @@ const LandingPage = () => {
               </p>
             </div>
 
-            <div className="flex flex-col items-center text-center">
+            <div className="flex flex-col items-center">
               <div className="w-20 h-20 rounded-full bg-[#bee800] flex items-center justify-center text-3xl font-bold text-black mb-8 shadow-lg">
                 2
               </div>
@@ -132,7 +132,7 @@ const LandingPage = () => {
               </p>
             </div>
 
-            <div className="flex flex-col items-center text-center">
+            <div className="flex flex-col items-center">
               <div className="w-20 h-20 rounded-full bg-[#bee800] flex items-center justify-center text-3xl font-bold text-black mb-8 shadow-lg">
                 3
               </div>
@@ -146,9 +146,9 @@ const LandingPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 md:py-28 lg:py-32">
+      <section className="py-20 md:py-28 lg:py-32 text-center">
         <div className="max-w-4xl mx-auto px-4 md:px-6 lg:px-8">
-          <div className="bg-black text-white rounded-2xl p-8 md:p-12 lg:p-16 text-center">
+          <div className="bg-black text-white rounded-2xl p-8 md:p-12 lg:p-16">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
               Ready to get started?
             </h2>
