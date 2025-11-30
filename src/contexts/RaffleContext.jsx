@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { RAFFLE_CONTRACT_ADDRESS, RAFFLE_ABI } from '../lib/constants';
-import { useAppKitProvider, useAppKitAccount } from "@reown/appkit/react";
+import { useWallet } from './WalletContext';
 
 const RaffleContext = createContext();
 
@@ -15,27 +15,35 @@ export const useRaffle = () => {
 
 export const RaffleProvider = ({ children }) => {
   const [contract, setContract] = useState(null);
+  const [provider, setProvider] = useState(null);
   const [raffles, setRaffles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { walletProvider } = useAppKitProvider('eip155');
-  const { address, isConnected, chainId } = useAppKitAccount();
+  const { address, isConnected } = useWallet();
 
+  // Initialize provider and contract
   useEffect(() => {
-    const init = async () => {
-      if (walletProvider) {
-        const web3Provider = new ethers.BrowserProvider(walletProvider);
-        const signer = await web3Provider.getSigner();
+    const initProvider = async () => {
+      try {
+        // Use Celo mainnet RPC
+        const rpcProvider = new ethers.JsonRpcProvider('https://forno.celo.org');
+        setProvider(rpcProvider);
+
+        // Create contract instance (read-only for now)
         const raffleContract = new ethers.Contract(
           RAFFLE_CONTRACT_ADDRESS,
           RAFFLE_ABI,
-          signer
+          rpcProvider
         );
         setContract(raffleContract);
+      } catch (error) {
+        console.error('Failed to initialize provider:', error);
       }
     };
-    init();
-  }, [walletProvider]);
 
+    initProvider();
+  }, []);
+
+  // Fetch raffles when contract is ready
   useEffect(() => {
     if (contract) {
       getAllRaffles();
@@ -43,34 +51,54 @@ export const RaffleProvider = ({ children }) => {
   }, [contract]);
 
   const createRaffle = async (maxParticipants) => {
-    const tx = await contract.createRaffle(maxParticipants);
-    const receipt = await tx.wait();
-    const event = receipt.logs.find(
-      log => log.fragment && log.fragment.name === 'RaffleCreated'
-    );
-    const raffleId = event ? event.args[0] : null;
-    return { success: true, raffleId, txHash: receipt.hash };
+    if (!isConnected || !address) {
+      throw new Error('Wallet not connected');
+    }
+
+    // TODO: Get signer from connected wallet
+    // For now, this will throw an error until wallet signing is implemented
+    throw new Error('Transaction signing not yet implemented. Please implement wallet signing in WalletContext.');
+    
+    // Example implementation once wallet signing is ready:
+    // const signer = await getSigner();
+    // const contractWithSigner = contract.connect(signer);
+    // const tx = await contractWithSigner.createRaffle(maxParticipants);
+    // const receipt = await tx.wait();
+    // return { success: true, raffleId: receipt.logs[0].args[0], txHash: receipt.hash };
   };
 
   const joinRaffle = async (raffleId) => {
-    const tx = await contract.joinRaffle(raffleId);
-    const receipt = await tx.wait();
-    return { success: true, txHash: receipt.hash };
+    if (!isConnected || !address) {
+      throw new Error('Wallet not connected');
+    }
+
+    // TODO: Get signer from connected wallet
+    throw new Error('Transaction signing not yet implemented. Please implement wallet signing in WalletContext.');
   };
 
   const drawWinner = async (raffleId) => {
-    const tx = await contract.drawWinner(raffleId);
-    const receipt = await tx.wait();
-    return { success: true, txHash: receipt.hash };
+    if (!isConnected || !address) {
+      throw new Error('Wallet not connected');
+    }
+
+    // TODO: Get signer from connected wallet
+    throw new Error('Transaction signing not yet implemented. Please implement wallet signing in WalletContext.');
   };
 
   const cancelRaffle = async (raffleId) => {
-    const tx = await contract.cancelRaffle(raffleId);
-    const receipt = await tx.wait();
-    return { success: true, txHash: receipt.hash };
+    if (!isConnected || !address) {
+      throw new Error('Wallet not connected');
+    }
+
+    // TODO: Get signer from connected wallet
+    throw new Error('Transaction signing not yet implemented. Please implement wallet signing in WalletContext.');
   };
 
   const getRaffle = async (raffleId) => {
+    if (!contract) {
+      throw new Error('Contract not initialized');
+    }
+
     const raffle = await contract.getRaffle(raffleId);
     return {
       id: raffleId,
@@ -86,14 +114,22 @@ export const RaffleProvider = ({ children }) => {
   };
 
   const getParticipants = async (raffleId) => {
+    if (!contract) {
+      throw new Error('Contract not initialized');
+    }
     return await contract.getParticipants(raffleId);
   };
 
   const getTotalRaffles = async () => {
+    if (!contract) {
+      throw new Error('Contract not initialized');
+    }
     return Number(await contract.getTotalRaffles());
   };
 
   const getAllRaffles = async () => {
+    if (!contract) return;
+    
     setLoading(true);
     try {
       const totalRaffles = await contract.getTotalRaffles();
@@ -114,12 +150,18 @@ export const RaffleProvider = ({ children }) => {
         drawnAt: Number(raffle[7]),
       }));
       setRaffles(rafflesData);
+    } catch (error) {
+      console.error('Failed to fetch raffles:', error);
     } finally {
       setLoading(false);
     }
   };
 
   const hasUserJoined = async (raffleId, userAddress) => {
+    if (!contract) {
+      throw new Error('Contract not initialized');
+    }
+    
     const addressToCheck = userAddress || address;
     if (!addressToCheck) return false;
     return await contract.hasUserJoined(raffleId, addressToCheck);
@@ -127,6 +169,7 @@ export const RaffleProvider = ({ children }) => {
 
   const value = {
     contract,
+    provider,
     raffles,
     loading,
     createRaffle,
@@ -140,7 +183,6 @@ export const RaffleProvider = ({ children }) => {
     hasUserJoined,
     address,
     isConnected,
-    chainId,
   };
 
   return (
