@@ -93,10 +93,10 @@ const RaffleDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen flex items-center justify-center bg-[#fafafa]">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-primary mb-4"></div>
-          <p className="text-muted-foreground">Loading raffle details...</p>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-[#e5e5e5] border-t-[#bee800] mb-4"></div>
+          <p className="text-[#737373]">Loading raffle details...</p>
         </div>
       </div>
     );
@@ -104,7 +104,7 @@ const RaffleDetailPage = () => {
 
   if (error && !raffle) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background px-4">
+      <div className="min-h-screen flex items-center justify-center bg-[#fafafa] px-4">
         <div className="card max-w-md border-2 border-red-200 bg-red-50">
           <p className="font-semibold mb-2 text-red-900">Error</p>
           <p className="text-sm text-red-700">{error}</p>
@@ -115,8 +115,8 @@ const RaffleDetailPage = () => {
 
   if (!raffle) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <p className="text-muted-foreground">Raffle not found.</p>
+      <div className="min-h-screen flex items-center justify-center bg-[#fafafa]">
+        <p className="text-[#737373]">Raffle not found.</p>
       </div>
     );
   }
@@ -127,11 +127,11 @@ const RaffleDetailPage = () => {
   const canCancel = isOwner && raffle.isActive && !raffle.isDrawn;
 
   return (
-    <div className="min-h-screen bg-background py-12 md:py-16 px-4">
-      <div className="container max-w-5xl mx-auto">
+    <div className="min-h-screen bg-[#fafafa] py-16 md:py-20">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
         <button 
           onClick={() => navigate('/raffles')} 
-          className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-8 font-medium transition-colors"
+          className="inline-flex items-center gap-2 text-[#737373] hover:text-[#0a0a0a] mb-8 font-medium transition-colors"
         >
           <ArrowLeft size={20} /> Back to Raffles
         </button>
@@ -144,7 +144,7 @@ const RaffleDetailPage = () => {
               <h1 className="text-3xl md:text-4xl font-bold">Raffle #{id}</h1>
               <div>
                 {raffle.isActive && !raffle.isDrawn && (
-                  <span className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-sm font-medium">
+                  <span className="inline-flex items-center px-4 py-2 rounded-full bg-[#bee800]/10 border border-[#bee800]/20 text-sm font-medium">
                     Active
                   </span>
                 )}
@@ -154,49 +154,49 @@ const RaffleDetailPage = () => {
                   </span>
                 )}
                 {!raffle.isActive && !raffle.isDrawn && (
-                  <span className="inline-flex items-center px-4 py-2 rounded-full bg-muted border border-border text-muted-foreground text-sm font-medium">
+                  <span className="inline-flex items-center px-4 py-2 rounded-full bg-[#f5f5f5] border border-[#e5e5e5] text-[#737373] text-sm font-medium">
                     Cancelled
                   </span>
                 )}
               </div>
             </div>
-            <p className="text-sm text-muted-foreground font-mono break-all">
+            <p className="text-sm text-[#737373] font-mono break-all">
               Owner: {raffle.owner}
             </p>
           </div>
 
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="p-6 rounded-xl border border-border bg-muted/30">
+            <div className="p-6 rounded-xl border border-[#e5e5e5] bg-[#f5f5f5]/30">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Users className="w-5 h-5 text-primary" />
+                <div className="w-10 h-10 rounded-lg bg-[#bee800]/10 flex items-center justify-center">
+                  <Users className="w-5 h-5 text-[#bee800]" />
                 </div>
-                <span className="text-sm font-medium text-muted-foreground">Participants</span>
+                <span className="text-sm font-medium text-[#737373]">Participants</span>
               </div>
               <p className="text-3xl font-bold">
-                {raffle.currentParticipants.toString()}<span className="text-xl text-muted-foreground">/{raffle.maxParticipants.toString()}</span>
+                {raffle.currentParticipants.toString()}<span className="text-xl text-[#737373]">/{raffle.maxParticipants.toString()}</span>
               </p>
             </div>
 
-            <div className="p-6 rounded-xl border border-border bg-muted/30">
+            <div className="p-6 rounded-xl border border-[#e5e5e5] bg-[#f5f5f5]/30">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Ticket className="w-5 h-5 text-primary" />
+                <div className="w-10 h-10 rounded-lg bg-[#bee800]/10 flex items-center justify-center">
+                  <Ticket className="w-5 h-5 text-[#bee800]" />
                 </div>
-                <span className="text-sm font-medium text-muted-foreground">Status</span>
+                <span className="text-sm font-medium text-[#737373]">Status</span>
               </div>
               <p className="text-3xl font-bold">
                 {raffle.isActive ? 'Open' : 'Closed'}
               </p>
             </div>
 
-            <div className="p-6 rounded-xl border border-border bg-muted/30">
+            <div className="p-6 rounded-xl border border-[#e5e5e5] bg-[#f5f5f5]/30">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Trophy className="w-5 h-5 text-primary" />
+                <div className="w-10 h-10 rounded-lg bg-[#bee800]/10 flex items-center justify-center">
+                  <Trophy className="w-5 h-5 text-[#bee800]" />
                 </div>
-                <span className="text-sm font-medium text-muted-foreground">Winner</span>
+                <span className="text-sm font-medium text-[#737373]">Winner</span>
               </div>
               <p className="text-3xl font-bold">
                 {raffle.isDrawn ? 'Selected' : 'Pending'}
@@ -206,12 +206,12 @@ const RaffleDetailPage = () => {
 
           {/* Winner Announcement */}
           {raffle.isDrawn && raffle.winner && (
-            <div className="p-6 rounded-xl bg-primary/10 border-2 border-primary/20 mb-8">
+            <div className="p-6 rounded-xl bg-[#bee800]/10 border-2 border-[#bee800]/20 mb-8">
               <div className="flex items-center gap-3 mb-3">
-                <Trophy className="w-6 h-6 text-primary" />
+                <Trophy className="w-6 h-6 text-[#bee800]" />
                 <h2 className="text-lg font-bold">Winner Selected!</h2>
               </div>
-              <p className="text-sm font-mono break-all bg-background px-4 py-3 rounded-lg">{raffle.winner}</p>
+              <p className="text-sm font-mono break-all bg-white px-4 py-3 rounded-lg">{raffle.winner}</p>
             </div>
           )}
 
@@ -227,7 +227,7 @@ const RaffleDetailPage = () => {
               </button>
             )}
             {userJoined && !raffle.isDrawn && (
-              <div className="flex-1 p-4 rounded-xl bg-primary/10 border border-primary/20 text-center">
+              <div className="flex-1 p-4 rounded-xl bg-[#bee800]/10 border border-[#bee800]/20 text-center">
                 <p className="font-semibold">✓ You've joined this raffle!</p>
               </div>
             )}
@@ -235,7 +235,7 @@ const RaffleDetailPage = () => {
               <button 
                 onClick={handleDraw} 
                 disabled={actionLoading} 
-                className="btn bg-primary text-foreground hover:bg-primary/90 flex-1"
+                className="btn bg-[#bee800] text-[#0a0a0a] hover:bg-[#bee800]/90 flex-1"
               >
                 {actionLoading ? 'Drawing...' : 'Draw Winner'}
               </button>
@@ -267,18 +267,18 @@ const RaffleDetailPage = () => {
           {participants.length > 0 ? (
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {participants.map((p, i) => (
-                <div key={i} className="p-4 rounded-xl border border-border bg-muted/30 text-sm font-mono break-all hover:bg-muted/50 transition-colors">
+                <div key={i} className="p-4 rounded-xl border border-[#e5e5e5] bg-[#f5f5f5]/30 text-sm font-mono break-all hover:bg-[#f5f5f5]/50 transition-colors">
                   {p}
                 </div>
               ))}
             </div>
           ) : (
             <div className="text-center py-12">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted/50 flex items-center justify-center">
-                <Users className="w-8 h-8 text-muted-foreground" />
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#f5f5f5]/50 flex items-center justify-center">
+                <Users className="w-8 h-8 text-[#737373]" />
               </div>
-              <p className="text-muted-foreground">No participants yet</p>
-              <p className="text-sm text-muted-foreground mt-1">Be the first to join!</p>
+              <p className="text-[#737373]">No participants yet</p>
+              <p className="text-sm text-[#737373] mt-1">Be the first to join!</p>
             </div>
           )}
         </div>

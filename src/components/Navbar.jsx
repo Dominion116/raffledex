@@ -4,7 +4,7 @@ import { Ticket } from 'lucide-react';
 const Navbar = () => {
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div className="container mx-auto flex justify-between items-center py-3 sm:py-4 px-4 max-w-7xl">
+      <div className="max-w-7xl mx-auto flex justify-between items-center py-4 px-4 md:px-6 lg:px-8">
         <Link to="/" className="flex items-center gap-2">
           <div className="w-7 h-7 sm:w-8 sm:h-8 bg-black rounded-lg flex items-center justify-center">
             <Ticket className="w-4 h-4 sm:w-5 sm:h-5 text-white" />

@@ -49,15 +49,15 @@ const CreateRaffle = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#fafafa] py-12 sm:py-16 md:py-20 lg:py-24 px-4">
-      <div className="container mx-auto max-w-2xl">
+    <div className="min-h-screen bg-[#fafafa] py-16 md:py-20 lg:py-24">
+      <div className="max-w-2xl mx-auto px-4 md:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-8 sm:mb-10 md:mb-12">
-          <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-[#bee800] rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6">
+        <div className="text-center mb-12">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-[#bee800] rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-6">
             <Sparkles className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-black" />
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 px-4">Create Raffle</h1>
-          <p className="text-sm sm:text-base md:text-lg text-gray-600 px-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">Create Raffle</h1>
+          <p className="text-sm sm:text-base md:text-lg text-gray-600">
             Launch your transparent on-chain raffle in seconds
           </p>
         </div>

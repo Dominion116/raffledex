@@ -3,12 +3,12 @@ import { Home, ArrowLeft } from 'lucide-react';
 
 const NotFoundPage = () => {
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[#fafafa] flex items-center justify-center px-4">
       <div className="text-center max-w-md">
         <div className="mb-8">
-          <h1 className="text-9xl font-bold text-primary mb-4">404</h1>
+          <h1 className="text-9xl font-bold text-[#bee800] mb-4">404</h1>
           <h2 className="text-3xl font-bold mb-3">Page not found</h2>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-[#737373] text-lg">
             Sorry, we couldn't find the page you're looking for.
           </p>
         </div>

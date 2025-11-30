@@ -10,8 +10,8 @@ const BrowseRafflesPage = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header Section */}
-      <section className="py-12 sm:py-14 md:py-16 lg:py-20 px-4 border-b border-gray-200">
-        <div className="container mx-auto max-w-7xl">
+      <section className="py-16 md:py-20 border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-6 sm:mb-8">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 px-4">Browse Raffles</h1>
             <p className="text-sm sm:text-base md:text-lg text-gray-600 px-4">
@@ -34,8 +34,8 @@ const BrowseRafflesPage = () => {
       </section>
 
       {/* Raffles Grid */}
-      <section className="py-12 sm:py-14 md:py-16 px-4">
-        <div className="container mx-auto max-w-7xl">
+      <section className="py-16 md:py-20">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
