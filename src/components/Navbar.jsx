@@ -19,7 +19,9 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <appkit-button />
+          <button className="btn-lime text-sm">
+            Connect Wallet
+          </button>
         </div>
       </div>
     </nav>
