@@ -221,7 +221,7 @@ const RaffleDetailPage = () => {
               <button 
                 onClick={handleJoin} 
                 disabled={actionLoading} 
-                className="btn btn-primary flex-1"
+                className="btn-lime flex-1"
               >
                 {actionLoading ? 'Joining...' : 'Join Raffle'}
               </button>
@@ -244,7 +244,7 @@ const RaffleDetailPage = () => {
               <button 
                 onClick={handleCancel} 
                 disabled={actionLoading} 
-                className="btn btn-outline flex-1"
+                className="btn-outline flex-1"
               >
                 {actionLoading ? 'Cancelling...' : 'Cancel Raffle'}
               </button>

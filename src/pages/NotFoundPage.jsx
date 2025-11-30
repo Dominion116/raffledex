@@ -16,14 +16,14 @@ const NotFoundPage = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link 
             to="/" 
-            className="btn btn-primary inline-flex items-center justify-center gap-2"
+            className="btn-lime inline-flex items-center justify-center gap-2"
           >
             <Home className="w-4 h-4" />
             Go home
           </Link>
           <button 
             onClick={() => window.history.back()} 
-            className="btn btn-outline inline-flex items-center justify-center gap-2"
+            className="btn-outline inline-flex items-center justify-center gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
             Go back

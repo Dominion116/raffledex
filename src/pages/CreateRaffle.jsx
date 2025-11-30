@@ -66,7 +66,7 @@ const CreateRaffle = () => {
           {/* Connection Status */}
           {!isConnected ? (
             <div className="flex items-start gap-2 sm:gap-3 p-3 sm:p-4 rounded-xl bg-amber-50 border border-amber-200 mb-4 sm:mb-6">
-              <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+              <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 shrink-0 mt-0.5" />
               <div>
                 <p className="font-medium text-amber-900 text-sm sm:text-base">Wallet not connected</p>
                 <p className="text-xs sm:text-sm text-amber-700 mt-1">
@@ -76,7 +76,7 @@ const CreateRaffle = () => {
             </div>
           ) : (
             <div className="flex items-start gap-2 sm:gap-3 p-3 sm:p-4 rounded-xl bg-[#bee800]/10 border border-[#bee800]/20 mb-4 sm:mb-6">
-              <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-[#bee800] flex-shrink-0 mt-0.5" />
+              <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-[#bee800] shrink-0 mt-0.5" />
               <div>
                 <p className="font-medium text-sm sm:text-base">Wallet connected</p>
                 <p className="text-xs sm:text-sm text-gray-600 mt-1">
@@ -116,7 +116,7 @@ const CreateRaffle = () => {
 
             {error && (
               <div className="flex items-start gap-2 sm:gap-3 p-3 sm:p-4 rounded-xl bg-red-50 border border-red-200">
-                <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 shrink-0 mt-0.5" />
                 <p className="text-xs sm:text-sm font-medium text-red-900">{error}</p>
               </div>
             )}
@@ -124,14 +124,14 @@ const CreateRaffle = () => {
             <button
               onClick={handleCreateRaffle}
               disabled={!isConnected || loading || !maxParticipants}
-              className="btn-lime w-full text-sm sm:text-base">
+              className="btn-lime w-full text-sm sm:text-base"
             >
               {loading ? 'Creating Raffle...' : 'Create Raffle'}
             </button>
 
             {/* Info */}
             <div className="pt-4 sm:pt-6 border-t border-gray-200">
-              <div className="flex items-center justify-between text-xs sm:text-sm">m:text-sm">
+              <div className="flex items-center justify-between text-xs sm:text-sm">
                 <span className="text-gray-600">Network</span>
                 <span className="font-medium">Celo Mainnet</span>
               </div>

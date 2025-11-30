@@ -8,7 +8,7 @@ const BrowseRafflesPage = () => {
   const { raffles, loading } = useRaffle();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#fafafa]">
       {/* Header Section */}
       <section className="py-16 md:py-20 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
@@ -57,7 +57,7 @@ const BrowseRafflesPage = () => {
               <p className="text-gray-600 text-sm sm:text-base md:text-lg mb-6 sm:mb-8 max-w-md mx-auto px-4">
                 Be the first to create a transparent on-chain raffle on RaffleDex
               </p>
-              <Link to="/create" className="btn btn-primary">
+              <Link to="/create" className="btn-lime">
                 Create First Raffle
               </Link>
             </div>

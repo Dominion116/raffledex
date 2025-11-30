@@ -57,9 +57,9 @@ const RaffleCard = ({ raffle }) => {
             </span>
           </div>
           
-          <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
+          <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
             <div
-              className="bg-primary h-2 rounded-full transition-all duration-500"
+              className="bg-[#bee800] h-2 rounded-full transition-all duration-500"
               style={{ width: `${progress}%` }}
             ></div>
           </div>
