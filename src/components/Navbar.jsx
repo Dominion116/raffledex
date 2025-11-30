@@ -3,19 +3,19 @@ import { Ticket } from 'lucide-react';
 
 const Navbar = () => {
   return (
-    <nav className="bg-white border-b border-border sticky top-0 z-50">
-      <div className="container mx-auto flex justify-between items-center py-4 px-4">
+    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
+      <div className="container mx-auto flex justify-between items-center py-3 sm:py-4 px-4 max-w-7xl">
         <Link to="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
-            <Ticket className="w-5 h-5 text-background" />
+          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-black rounded-lg flex items-center justify-center">
+            <Ticket className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
           </div>
-          <span className="text-xl font-bold">RaffleDex</span>
+          <span className="text-lg sm:text-xl font-bold">RaffleDex</span>
         </Link>
         
         <div className="hidden md:flex items-center gap-8">
-          <Link to="/" className="text-sm font-medium hover:text-primary transition-colors">Home</Link>
-          <Link to="/raffles" className="text-sm font-medium hover:text-primary transition-colors">Browse</Link>
-          <Link to="/create" className="text-sm font-medium hover:text-primary transition-colors">Create</Link>
+          <Link to="/" className="text-sm font-medium hover:text-[#bee800] transition-colors">Home</Link>
+          <Link to="/raffles" className="text-sm font-medium hover:text-[#bee800] transition-colors">Browse</Link>
+          <Link to="/create" className="text-sm font-medium hover:text-[#bee800] transition-colors">Create</Link>
         </div>
 
         <div className="flex items-center gap-3">

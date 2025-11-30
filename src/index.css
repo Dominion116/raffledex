@@ -1,365 +1,135 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* Define custom utilities FIRST, before using them */
-@layer utilities {
-  .border-border {
-    border-color: hsl(var(--border));
-  }
-  
-  .bg-background {
-    background-color: hsl(var(--background));
-  }
-  
-  .bg-card {
-    background-color: hsl(var(--card));
-  }
-  
-  .bg-primary {
-    background-color: hsl(var(--primary));
-  }
-  
-  .bg-secondary {
-    background-color: hsl(var(--secondary));
-  }
-  
-  .bg-accent {
-    background-color: hsl(var(--accent));
-  }
-  
-  .bg-muted {
-    background-color: hsl(var(--muted));
-  }
-  
-  .bg-success {
-    background-color: hsl(var(--success));
-  }
-  
-  .text-foreground {
-    color: hsl(var(--foreground));
-  }
-  
-  .text-card-foreground {
-    color: hsl(var(--card-foreground));
-  }
-  
-  .text-primary {
-    color: hsl(var(--primary));
-  }
-  
-  .text-primary-foreground {
-    color: hsl(var(--primary-foreground));
-  }
-  
-  .text-secondary-foreground {
-    color: hsl(var(--secondary-foreground));
-  }
-  
-  .text-accent {
-    color: hsl(var(--accent));
-  }
-  
-  .text-accent-foreground {
-    color: hsl(var(--accent-foreground));
-  }
-  
-  .text-muted-foreground {
-    color: hsl(var(--muted-foreground));
-  }
-  
-  .text-success {
-    color: hsl(var(--success));
-  }
-  
-  .text-success-foreground {
-    color: hsl(var(--success-foreground));
-  }
-  
-  .text-destructive {
-    color: hsl(var(--destructive));
-  }
-  
-  .text-destructive-foreground {
-    color: hsl(var(--destructive-foreground));
-  }
-  
-  /* Text Utilities */
-  .text-gradient {
-    background: hsl(var(--primary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-  .text-highlight {
-    background: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
-    padding: 0.125rem 0.5rem;
-    border-radius: 0.25rem;
-    font-weight: 700;
-  }
-  
-  /* Hover Effects */
-  .hover-scale {
-    transition: transform 200ms;
-  }
-  
-  .hover-scale:hover {
-    transform: scale(1.02);
-  }
-  
-  .hover-lift {
-    transition: transform 200ms;
-  }
-  
-  .hover-lift:hover {
-    transform: translateY(-0.125rem);
-  }
-  
-  /* Animations */
-  @keyframes shimmer {
-    0% {
-      background-position: -1000px 0;
-    }
-    100% {
-      background-position: 1000px 0;
-    }
-  }
-  
-  .animate-shimmer {
-    animation: shimmer 2s infinite linear;
-    background: linear-gradient(
-      to right,
-      transparent 0%,
-      rgba(255, 255, 255, 0.1) 50%,
-      transparent 100%
-    );
-    background-size: 1000px 100%;
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #fafafa;
+  color: #0a0a0a;
+  letter-spacing: -0.01em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Custom utility classes */
+.btn-lime {
+  background: #bee800;
+  color: #0a0a0a;
+  padding: 0.625rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  .btn-lime {
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
   }
 }
 
-/* NOW define CSS variables and use the utilities */
-@layer base {
-  :root {
-    /* Modern clean palette inspired by reference design */
-    --background: 0 0% 98%;
-    --foreground: 0 0% 8%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 8%;
-
-    --primary: 84 85% 58%; /* bright lime green */
-    --primary-foreground: 0 0% 0%;
-
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 8%;
-
-    --accent: 84 85% 58%;
-    --accent-foreground: 0 0% 0%;
-
-    --muted: 0 0% 94%;
-    --muted-foreground: 0 0% 45%;
-
-    --success: 142 76% 36%;
-    --success-foreground: 0 0% 100%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 0 0% 90%;
-    --input: 0 0% 98%;
-    --ring: 84 85% 58%;
-
-    --radius-sm: 12px;
-    --radius: 16px;
-    --radius-lg: 24px;
-
-    --dark-bg: 0 0% 8%;
-    --dark-card: 0 0% 12%;
-    --card-shadow: 0 4px 24px rgba(0,0,0,0.06);
-    --card-shadow-hover: 0 8px 32px rgba(0,0,0,0.12);
-  }
+.btn-lime:hover {
+  background: #a5d000;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(190, 232, 0, 0.3);
 }
 
-@layer base {
-  * {
-    border-color: hsl(var(--border));
-  }
-  
-  body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-    letter-spacing: -0.01em;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
-  
-  /* Custom scrollbar - Uniswap style */
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  ::-webkit-scrollbar-track {
-    background-color: transparent;
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    background-color: hsl(var(--muted));
-    border-radius: 9999px;
-  }
-  
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: hsl(var(--muted-foreground) / 0.3);
-  }
+.btn-lime:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
-/* Modern button component */
-@layer components {
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    border-radius: 9999px;
-    padding: 0.75rem 1.75rem;
-    font-size: 0.9375rem;
-    font-weight: 600;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: pointer;
-    border: none;
-    letter-spacing: -0.01em;
-  }
+.btn-outline {
+  background: transparent;
+  color: #0a0a0a;
+  padding: 0.625rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: 2px solid #0a0a0a;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-align: center;
+  white-space: nowrap;
+}
 
-  .btn:hover {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-    transform: translateY(-2px);
-  }
-
-  .btn:active {
-    transform: translateY(0);
-  }
-
-  .btn-primary {
-    background: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
-    font-weight: 700;
-  }
-
-  .btn-primary:hover {
-    background: hsl(84 85% 55%);
-    box-shadow: 0 6px 24px rgba(190,232,0,0.4);
-  }
-
-  .card-modern {
-    background-color: hsl(var(--card));
-    color: hsl(var(--card-foreground));
-    border-radius: var(--radius);
-    box-shadow: var(--card-shadow);
-    border: 1px solid hsl(var(--border));
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .card-modern:hover {
-    box-shadow: var(--card-shadow-hover);
-  }
-
-  /* Modern card component */
-  .card {
-    background-color: hsl(var(--card));
-    color: hsl(var(--card-foreground));
-    border-radius: var(--radius);
-    box-shadow: var(--card-shadow);
-    padding: 1.5rem;
-    border: 1px solid hsl(var(--border));
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .card:hover {
-    box-shadow: var(--card-shadow-hover);
-  }
-
-  @media (min-width: 640px) {
-    .card {
-      padding: 2rem;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .card {
-      padding: 2.5rem;
-    }
-  }
-
-  .card-dark {
-    background-color: hsl(var(--dark-card));
-    color: white;
-    border: 1px solid hsl(0 0% 20%);
-  }
-
-  /* Container helper to standardize page width and side padding */
-  .container {
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  /* Basic input style */
-  .input {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border-radius: var(--radius-sm);
-    border: 1px solid hsl(var(--border));
-    background: hsl(var(--input));
-    color: hsl(var(--foreground));
-    outline: none;
-  }
-
-  .input:focus {
-    box-shadow: 0 0 0 4px hsl(var(--ring) / 0.12);
-    border-color: hsl(var(--ring));
-  }
-
-  /* Alerts and badges */
-  .alert-success { background: hsl(var(--success) / 0.06); border-radius: var(--radius-sm); padding: 0.75rem; }
-  .alert-warning { background: hsl(40 90% 85% / 0.12); border-radius: var(--radius-sm); padding: 0.75rem; }
-  .alert-danger { background: hsl(0 80% 60% / 0.06); border-radius: var(--radius-sm); padding: 0.75rem; }
-
-  .badge-success { background: hsl(var(--success)); color: white; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; }
-  .badge-info { background: hsl(210 80% 56%); color: white; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; }
-  .badge-neutral { background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; }
-
+@media (min-width: 640px) {
   .btn-outline {
-    background: transparent;
-    border: 2px solid hsl(var(--foreground));
-    color: hsl(var(--foreground));
-    border-radius: 9999px;
-    padding: 0.75rem 1.75rem;
-    font-weight: 600;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
   }
+}
 
-  .btn-outline:hover {
-    background: hsl(var(--foreground));
-    color: hsl(var(--background));
-  }
+.btn-outline:hover {
+  background: #0a0a0a;
+  color: #ffffff;
+}
 
-  .btn-success {
-    background: hsl(var(--success));
-    color: hsl(var(--success-foreground));
-    border-radius: 9999px;
-    padding: 0.75rem 1.75rem;
-  }
+.card {
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-  .btn-success:hover {
-    box-shadow: 0 4px 16px hsl(var(--success) / 0.3);
+@media (min-width: 640px) {
+  .card {
+    border-radius: 16px;
+    padding: 1.5rem;
   }
+}
+
+@media (min-width: 1024px) {
+  .card {
+    padding: 2rem;
+  }
+}
+
+.card:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px);
+}
+
+.text-lime {
+  color: #bee800;
+}
+
+.bg-lime {
+  background-color: #bee800;
+}
+
+.border-lime {
+  border-color: #bee800;
+}
+
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
 }
